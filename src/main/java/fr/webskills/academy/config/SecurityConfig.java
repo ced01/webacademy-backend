@@ -70,11 +70,20 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(
                                                 "/api/v1/auth/access-code",
+                                                "/api/v1/auth/register",
                                                 "/api/v1/auth/login",
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**",
                                                 "/swagger-ui.html",
                                                 "/error")
+                                        .permitAll()
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/domains/**",
+                                                "/api/v1/learning-domains/**",
+                                                "/api/v1/sections/**",
+                                                "/api/v1/lessons/**",
+                                                "/api/v1/search")
                                         .permitAll()
                                         .requestMatchers("/api/v1/admin/**")
                                         .hasRole("ADMIN")

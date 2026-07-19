@@ -10,11 +10,11 @@ public final class LearningDtos {
 
     public record LearningDomainRequest(
             @NotBlank @Size(max = 120) String name,
-            @NotBlank @Pattern(regexp = "[a-z0-9-]+") String slug,
+            @Pattern(regexp = "^$|[a-z0-9-]+") String slug,
             @Size(max = 300) String shortDescription,
             String description,
             String icon,
-            String coverImage,
+            @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String coverImage,
             int displayOrder,
             PublicationStatus status) {}
 
@@ -30,24 +30,43 @@ public final class LearningDtos {
             PublicationStatus status,
             Instant createdAt,
             Instant updatedAt,
-            long sectionCount) {}
+            long sectionCount,
+            List<String> levels) {}
 
     public record LearningSectionRequest(
             @NotBlank @Size(max = 180) String title,
-            @NotBlank @Pattern(regexp = "[a-z0-9-]+") String slug,
+            @Pattern(regexp = "^$|[a-z0-9-]+") String slug,
+            @Size(max = 500) String summary,
+            String content,
             String description,
+            @NotNull Level level,
             int displayOrder,
+            @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String videoUrl,
+            @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String sourceUrl,
+            @Size(max = 180) String sourceName,
+            Instant sourceVerifiedAt,
             PublicationStatus status) {}
 
     public record LearningSectionResponse(
             UUID id,
             UUID domainId,
+            String domainSlug,
             String title,
             String slug,
+            String summary,
+            String content,
             String description,
+            Level level,
+            String levelLabel,
             int displayOrder,
+            String videoUrl,
+            String sourceUrl,
+            String sourceName,
+            Instant sourceVerifiedAt,
             PublicationStatus status,
-            long lessonCount) {}
+            long lessonCount,
+            String previousSlug,
+            String nextSlug) {}
 
     public record LessonRequest(
             @NotBlank @Size(max = 180) String title,
@@ -87,7 +106,7 @@ public final class LearningDtos {
     public record LessonResourceRequest(
             @NotBlank String title,
             ResourceType type,
-            @NotBlank @Size(max = 500) String url,
+            @NotBlank @Size(max = 500) @Pattern(regexp = "https?://.+") String url,
             String description,
             int displayOrder) {}
 
@@ -110,31 +129,20 @@ public final class LearningDtos {
             Instant completedAt,
             Instant lastViewedAt) {}
 
-    public record AccessCodeRequest(
-            @NotBlank @Size(max = 120) String label,
-            @NotBlank @Size(min = 6, max = 120) String code,
-            boolean active,
-            Instant expiresAt,
-            Integer maxUses) {}
-
-    public record AccessCodeUpdateRequest(
-            @NotBlank @Size(max = 120) String label,
-            Boolean active,
-            Instant expiresAt,
-            Integer maxUses) {}
+    public record AccessCodeRequest(@Size(max = 120) String label) {}
 
     public record AccessCodeAdminResponse(
             UUID id,
+            String code,
             String label,
             boolean active,
-            Instant expiresAt,
-            Integer maxUses,
-            int usageCount,
-            Instant lastUsedAt,
+            Instant revokedAt,
+            UUID createdById,
+            String createdByEmail,
             Instant createdAt,
             Instant updatedAt) {}
 
-    public record StatusRequest(boolean active) {}
+    public record StatusRequest(@NotNull PublicationStatus status) {}
 
     public record ReorderItem(UUID id, int displayOrder) {}
 }

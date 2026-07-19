@@ -1,63 +1,74 @@
 package fr.webskills.academy.service;
 
 import fr.webskills.academy.domain.AccessCode;
+import fr.webskills.academy.domain.User;
 import fr.webskills.academy.dto.LearningDtos.*;
 import fr.webskills.academy.exception.ResourceNotFoundException;
 import fr.webskills.academy.mapper.AcademyMapper;
 import fr.webskills.academy.repository.AccessCodeRepository;
+import fr.webskills.academy.security.AcademyUserDetails;
+import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminAccessCodeService {
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final Base64.Encoder ENCODER = Base64.getUrlEncoder().withoutPadding();
+
     private final AccessCodeRepository repo;
-    private final PasswordEncoder encoder;
     private final AcademyMapper mapper;
 
-    public AdminAccessCodeService(
-            AccessCodeRepository repo, PasswordEncoder encoder, AcademyMapper mapper) {
+    public AdminAccessCodeService(AccessCodeRepository repo, AcademyMapper mapper) {
         this.repo = repo;
-        this.encoder = encoder;
         this.mapper = mapper;
     }
 
+    @Transactional(readOnly = true)
     public List<AccessCodeAdminResponse> all() {
-        return repo.findAll().stream().map(mapper::toAccessCodeResponse).toList();
+        return repo.findAll().stream()
+                .sorted(Comparator.comparing(AccessCode::getCreatedAt).reversed())
+                .map(mapper::toAccessCodeResponse)
+                .toList();
     }
 
     @Transactional
-    public AccessCodeAdminResponse create(AccessCodeRequest r) {
+    public AccessCodeAdminResponse create(AccessCodeRequest r, AcademyUserDetails details) {
         AccessCode c = new AccessCode();
-        c.setLabel(r.label());
-        c.setCodeHash(encoder.encode(r.code()));
-        c.setActive(r.active());
-        c.setExpiresAt(r.expiresAt());
-        c.setMaxUses(r.maxUses());
+        c.setCode(generateUniqueCode());
+        c.setLabel(r.label() == null || r.label().isBlank() ? "Code d’accès" : r.label().trim());
+        c.setActive(true);
+        User creator = details == null ? null : details.user();
+        c.setCreatedBy(creator);
         return mapper.toAccessCodeResponse(repo.save(c));
     }
 
     @Transactional
-    public AccessCodeAdminResponse update(UUID id, AccessCodeUpdateRequest r) {
+    public AccessCodeAdminResponse revoke(UUID id) {
         AccessCode c = get(id);
-        c.setLabel(r.label());
-        if (r.active() != null) c.setActive(r.active());
-        c.setExpiresAt(r.expiresAt());
-        c.setMaxUses(r.maxUses());
+        c.setActive(false);
+        c.setRevokedAt(Instant.now());
         return mapper.toAccessCodeResponse(c);
     }
 
     @Transactional
-    public AccessCodeAdminResponse status(UUID id, boolean active) {
+    public AccessCodeAdminResponse activate(UUID id) {
         AccessCode c = get(id);
-        c.setActive(active);
+        c.setActive(true);
+        c.setRevokedAt(null);
         return mapper.toAccessCodeResponse(c);
     }
 
-    @Transactional
-    public void disable(UUID id) {
-        get(id).setActive(false);
+    private String generateUniqueCode() {
+        byte[] bytes = new byte[24];
+        String code;
+        do {
+            RANDOM.nextBytes(bytes);
+            code = "WSA-" + ENCODER.encodeToString(bytes);
+        } while (repo.existsByCode(code));
+        return code;
     }
 
     private AccessCode get(UUID id) {

@@ -21,6 +21,11 @@ public class AuthController {
         return auth.authenticateWithCode(request.code());
     }
 
+    @PostMapping("/register")
+    AuthResponse register(@RequestBody @Valid RegisterRequest request) {
+        return auth.register(request);
+    }
+
     @PostMapping("/login")
     AuthResponse login(@RequestBody @Valid LoginRequest request) {
         return auth.login(request);

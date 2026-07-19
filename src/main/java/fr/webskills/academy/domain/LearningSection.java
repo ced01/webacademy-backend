@@ -1,5 +1,6 @@
 package fr.webskills.academy.domain;
 
+import fr.webskills.academy.domain.enums.Level;
 import fr.webskills.academy.domain.enums.PublicationStatus;
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -31,11 +32,33 @@ public class LearningSection {
     @Column(nullable = false, length = 180)
     private String slug;
 
+    @Column(length = 500)
+    private String summary;
+
+    @Column(columnDefinition = "text")
+    private String content;
+
     @Column(columnDefinition = "text")
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private Level level = Level.BEGINNER;
+
     @Column(name = "display_order", nullable = false)
     private int displayOrder;
+
+    @Column(name = "video_url", length = 500)
+    private String videoUrl;
+
+    @Column(name = "source_url", length = 500)
+    private String sourceUrl;
+
+    @Column(name = "source_name", length = 180)
+    private String sourceName;
+
+    @Column(name = "source_verified_at")
+    private Instant sourceVerifiedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)

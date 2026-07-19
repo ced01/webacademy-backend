@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-access-codes-admin-fields
+      author: hermes
+      changes:
+        - addColumn:
+            tableName: access_codes
+            columns:
+              - column: {name: code, type: varchar(64)}
+              - column: {name: revoked_at, type: timestamp with time zone}
+              - column: {name: created_by_id, type: uuid}
+        - sql:
+            dbms: postgresql
+            sql: UPDATE access_codes SET code = 'LEGACY-' || encode(gen_random_bytes(18), 'base64') WHERE code IS NULL;
+        - sql:
+            dbms: h2
+            sql: UPDATE access_codes SET code = 'LEGACY-' || RANDOM_UUID() WHERE code IS NULL;
+        - addNotNullConstraint:
+            tableName: access_codes
+            columnName: code
+            columnDataType: varchar(64)
+        - addUniqueConstraint:
+            tableName: access_codes
+            columnNames: code
+            constraintName: uk_access_codes_code
+        - addForeignKeyConstraint:
+            baseTableName: access_codes
+            baseColumnNames: created_by_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_access_codes_created_by
+        - dropNotNullConstraint:
+            tableName: access_codes
+            columnName: code_hash
+            columnDataType: varchar(120)
+  - changeSet:
+      id: 003-learning-section-content-fields
+      author: hermes
+      changes:
+        - addColumn:
+            tableName: learning_sections
+            columns:
+              - column: {name: summary, type: varchar(500)}
+              - column: {name: content, type: text}
+              - column: {name: level, type: varchar(30), defaultValue: BEGINNER, constraints: {nullable: false}}
+              - column: {name: video_url, type: varchar(500)}
+              - column: {name: source_url, type: varchar(500)}
+              - column: {name: source_name, type: varchar(180)}
+              - column: {name: source_verified_at, type: timestamp with time zone}
+        - sql:
+            sql: UPDATE learning_sections SET summary = description WHERE summary IS NULL;

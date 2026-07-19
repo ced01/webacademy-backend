@@ -6,4 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AccessCodeRepository extends JpaRepository<AccessCode, UUID> {}
+public interface AccessCodeRepository extends JpaRepository<AccessCode, UUID> {
+    Optional<AccessCode> findByCode(String code);
+
+    boolean existsByCode(String code);
+}

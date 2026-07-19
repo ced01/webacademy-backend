@@ -5,10 +5,12 @@ import fr.webskills.academy.service.ContentService;
 import jakarta.validation.Valid;
 import java.util.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminContentController {
     private final ContentService content;
 
@@ -16,25 +18,46 @@ public class AdminContentController {
         this.content = content;
     }
 
-    @PostMapping("/domains")
+    @GetMapping({"/domains", "/learning-domains"})
+    List<LearningDomainResponse> domains() {
+        return content.adminDomains();
+    }
+
+    @GetMapping({"/domains/{id}", "/learning-domains/{id}"})
+    LearningDomainResponse domain(@PathVariable UUID id) {
+        return content.getAdminDomain(id);
+    }
+
+    @PostMapping({"/domains", "/learning-domains"})
     @ResponseStatus(HttpStatus.CREATED)
     LearningDomainResponse createDomain(@RequestBody @Valid LearningDomainRequest r) {
         return content.createDomain(r);
     }
 
-    @PutMapping("/domains/{id}")
+    @PutMapping({"/domains/{id}", "/learning-domains/{id}"})
     LearningDomainResponse updateDomain(
             @PathVariable UUID id, @RequestBody @Valid LearningDomainRequest r) {
         return content.updateDomain(id, r);
     }
 
-    @DeleteMapping("/domains/{id}")
+    @PatchMapping({"/domains/{id}/status", "/learning-domains/{id}/status"})
+    LearningDomainResponse updateDomainStatus(
+            @PathVariable UUID id, @RequestBody @Valid StatusRequest r) {
+        return content.updateDomainStatus(id, r.status());
+    }
+
+    @DeleteMapping({"/domains/{id}", "/learning-domains/{id}"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteDomain(@PathVariable UUID id) {
         content.archiveDomain(id);
     }
 
-    @PostMapping("/domains/{domainId}/sections")
+    @GetMapping({"/domains/{domainId}/sections", "/learning-domains/{domainId}/sections"})
+    List<LearningSectionResponse> sections(@PathVariable UUID domainId) {
+        return content.sectionsForDomain(domainId, true);
+    }
+
+    @PostMapping({"/domains/{domainId}/sections", "/learning-domains/{domainId}/sections"})
     @ResponseStatus(HttpStatus.CREATED)
     LearningSectionResponse createSection(
             @PathVariable UUID domainId, @RequestBody @Valid LearningSectionRequest r) {
@@ -45,6 +68,12 @@ public class AdminContentController {
     LearningSectionResponse updateSection(
             @PathVariable UUID id, @RequestBody @Valid LearningSectionRequest r) {
         return content.updateSection(id, r);
+    }
+
+    @PatchMapping("/sections/{id}/status")
+    LearningSectionResponse updateSectionStatus(
+            @PathVariable UUID id, @RequestBody @Valid StatusRequest r) {
+        return content.updateSectionStatus(id, r.status());
     }
 
     @DeleteMapping("/sections/{id}")

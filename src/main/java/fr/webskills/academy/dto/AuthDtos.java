@@ -9,6 +9,13 @@ public final class AuthDtos {
 
     public record AccessCodeLoginRequest(@NotBlank @Size(max = 120) String code) {}
 
+    public record RegisterRequest(
+            @NotBlank @Email String email,
+            @NotBlank @Size(min = 8, max = 120) String password,
+            @NotBlank @Size(max = 100) String firstName,
+            @NotBlank @Size(max = 100) String lastName,
+            @NotBlank @Size(max = 120) String accessCode) {}
+
     public record LoginRequest(
             @NotBlank @Email String email, @NotBlank @Size(min = 8, max = 120) String password) {}
 

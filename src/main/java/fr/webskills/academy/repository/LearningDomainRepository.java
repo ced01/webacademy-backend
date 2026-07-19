@@ -12,5 +12,9 @@ public interface LearningDomainRepository extends JpaRepository<LearningDomain, 
 
     boolean existsBySlug(String slug);
 
+    boolean existsBySlugAndIdNot(String slug, UUID id);
+
     List<LearningDomain> findByStatusOrderByDisplayOrderAsc(PublicationStatus status);
+
+    List<LearningDomain> findAllByOrderByDisplayOrderAscNameAsc();
 }

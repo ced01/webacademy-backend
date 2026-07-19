@@ -3,3 +3,7 @@ databaseChangeLog:
       file: db/changelog/001-schema.yml
   - include:
       file: db/changelog/002-seed-learning-content.yml
+  - include:
+      file: db/changelog/003-admin-access-codes-learning-sections.yml
+  - include:
+      file: db/changelog/004-seed-requested-learning-sections.yml

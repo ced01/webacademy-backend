@@ -1,0 +1,437 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-requested-learning-sections-seed
+      author: hermes
+      changes:
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '53cf50fa-03f5-527a-92d6-0d35355e00b0'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'Introduction au HTML'}
+              - column: {name: slug, value: 'introduction-au-html'}
+              - column: {name: summary, value: 'Decouvrir le role du HTML pour structurer les contenus web.'}
+              - column: {name: content, value: '# Introduction au HTML\n\nCette section propose une synthese originale pour progresser en HTML. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Decouvrir le role du HTML pour structurer les contenus web.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle HTML'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/HTML'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'db301269-dcf7-5314-94f5-9460a002179e'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'Structure d un document HTML'}
+              - column: {name: slug, value: 'structure-d-un-document-html'}
+              - column: {name: summary, value: 'Identifier doctype, html, head, meta, title et body.'}
+              - column: {name: content, value: '# Structure d un document HTML\n\nCette section propose une synthese originale pour progresser en HTML. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Identifier doctype, html, head, meta, title et body.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle HTML'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/HTML'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '6a1a1ba2-d623-5f09-91fe-ff8b90e61901'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'Liens et images'}
+              - column: {name: slug, value: 'liens-et-images'}
+              - column: {name: summary, value: 'Creer des liens utiles et des images avec textes alternatifs.'}
+              - column: {name: content, value: '# Liens et images\n\nCette section propose une synthese originale pour progresser en HTML. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Creer des liens utiles et des images avec textes alternatifs.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 12}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle HTML'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/HTML'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'a729c9b0-0ded-57b1-8688-db35bea63206'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'HTML semantique'}
+              - column: {name: slug, value: 'html-semantique'}
+              - column: {name: summary, value: 'Utiliser les balises porteuses de sens comme main, nav, article.'}
+              - column: {name: content, value: '# HTML semantique\n\nCette section propose une synthese originale pour progresser en HTML. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Utiliser les balises porteuses de sens comme main, nav, article.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 13}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle HTML'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/HTML'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '54de1bb3-89b2-5c1a-978c-e12279555c03'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Introduction au CSS'}
+              - column: {name: slug, value: 'introduction-au-css'}
+              - column: {name: summary, value: 'Comprendre cascade, heritage et separation structure style.'}
+              - column: {name: content, value: '# Introduction au CSS\n\nCette section propose une synthese originale pour progresser en CSS. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Comprendre cascade, heritage et separation structure style.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle CSS'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/CSS'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '1284760c-75bb-56bd-ad85-af3ba1c3abec'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Selecteurs'}
+              - column: {name: slug, value: 'selecteurs'}
+              - column: {name: summary, value: 'Cibler des elements sans sur-specifier les regles.'}
+              - column: {name: content, value: '# Selecteurs\n\nCette section propose une synthese originale pour progresser en CSS. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Cibler des elements sans sur-specifier les regles.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle CSS'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/CSS'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '3c013435-6ebf-5aac-9f5c-511702b93ed7'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Flexbox'}
+              - column: {name: slug, value: 'flexbox'}
+              - column: {name: summary, value: 'Aligner et repartir les elements sur un axe.'}
+              - column: {name: content, value: '# Flexbox\n\nCette section propose une synthese originale pour progresser en CSS. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Aligner et repartir les elements sur un axe.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 12}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle CSS'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/CSS'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '019bd36a-eb6e-5ae3-aea9-5c2bfb84fb92'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Responsive design'}
+              - column: {name: slug, value: 'responsive-design'}
+              - column: {name: summary, value: 'Adapter l interface aux tailles d ecran.'}
+              - column: {name: content, value: '# Responsive design\n\nCette section propose une synthese originale pour progresser en CSS. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Adapter l interface aux tailles d ecran.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 13}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle CSS'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/CSS'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '6a788111-49b1-5392-8f13-bec7dcfca49b'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'Variables et types'}
+              - column: {name: slug, value: 'variables-et-types'}
+              - column: {name: summary, value: 'Manipuler les valeurs de base et leurs conversions.'}
+              - column: {name: content, value: '# Variables et types\n\nCette section propose une synthese originale pour progresser en JavaScript. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Manipuler les valeurs de base et leurs conversions.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle JavaScript'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/JavaScript'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'b6a01a06-031d-5c51-a29d-b3654abaf8eb'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'Conditions'}
+              - column: {name: slug, value: 'conditions'}
+              - column: {name: summary, value: 'Executer du code selon une situation.'}
+              - column: {name: content, value: '# Conditions\n\nCette section propose une synthese originale pour progresser en JavaScript. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Executer du code selon une situation.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle JavaScript'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/JavaScript'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '3e5818ea-bf48-5c47-bb8e-e28957279a1e'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'Fonctions'}
+              - column: {name: slug, value: 'fonctions'}
+              - column: {name: summary, value: 'Factoriser un comportement reutilisable.'}
+              - column: {name: content, value: '# Fonctions\n\nCette section propose une synthese originale pour progresser en JavaScript. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Factoriser un comportement reutilisable.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 12}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle JavaScript'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/JavaScript'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '2a4e35dd-3b86-5fbd-91ab-56e6c029314e'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'DOM'}
+              - column: {name: slug, value: 'dom'}
+              - column: {name: summary, value: 'Lire et modifier le document affiche.'}
+              - column: {name: content, value: '# DOM\n\nCette section propose une synthese originale pour progresser en JavaScript. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Lire et modifier le document affiche.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 13}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle JavaScript'}
+              - column: {name: source_url, value: 'https://developer.mozilla.org/fr/docs/Web/JavaScript'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'b2e31895-3cab-5d1a-a128-07389b9f825c'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'Introduction a PHP'}
+              - column: {name: slug, value: 'introduction-a-php'}
+              - column: {name: summary, value: 'Comprendre le role de PHP cote serveur.'}
+              - column: {name: content, value: '# Introduction a PHP\n\nCette section propose une synthese originale pour progresser en PHP. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Comprendre le role de PHP cote serveur.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle PHP'}
+              - column: {name: source_url, value: 'https://www.php.net/manual/fr/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '09faa120-72fd-5b23-8d14-7d932294316a'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'Variables et types'}
+              - column: {name: slug, value: 'variables-et-types'}
+              - column: {name: summary, value: 'Manipuler chaines, nombres, booleens et tableaux.'}
+              - column: {name: content, value: '# Variables et types\n\nCette section propose une synthese originale pour progresser en PHP. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Manipuler chaines, nombres, booleens et tableaux.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle PHP'}
+              - column: {name: source_url, value: 'https://www.php.net/manual/fr/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'de784a4f-664f-5408-8c6e-62328a208a27'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'Formulaires HTTP'}
+              - column: {name: slug, value: 'formulaires-http'}
+              - column: {name: summary, value: 'Lire et valider les donnees envoyees par un formulaire.'}
+              - column: {name: content, value: '# Formulaires HTTP\n\nCette section propose une synthese originale pour progresser en PHP. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Lire et valider les donnees envoyees par un formulaire.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 12}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle PHP'}
+              - column: {name: source_url, value: 'https://www.php.net/manual/fr/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd16e887b-4dc9-5df9-8703-06519ef2ca61'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'PDO et bases de donnees'}
+              - column: {name: slug, value: 'pdo-et-bases-de-donnees'}
+              - column: {name: summary, value: 'Acceder a une base avec des requetes preparees.'}
+              - column: {name: content, value: '# PDO et bases de donnees\n\nCette section propose une synthese originale pour progresser en PHP. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Acceder a une base avec des requetes preparees.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 13}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle PHP'}
+              - column: {name: source_url, value: 'https://www.php.net/manual/fr/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '66fe8529-f97b-5185-8c31-4689645c409d'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'Introduction au SQL'}
+              - column: {name: slug, value: 'introduction-au-sql'}
+              - column: {name: summary, value: 'Comprendre tables, colonnes et lignes.'}
+              - column: {name: content, value: '# Introduction au SQL\n\nCette section propose une synthese originale pour progresser en SQL. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Comprendre tables, colonnes et lignes.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation PostgreSQL'}
+              - column: {name: source_url, value: 'https://www.postgresql.org/docs/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '2a21cc25-d40f-550c-bb3a-7eed5ea92dc6'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'SELECT et filtres'}
+              - column: {name: slug, value: 'select-et-filtres'}
+              - column: {name: summary, value: 'Lire des donnees avec SELECT WHERE ORDER BY.'}
+              - column: {name: content, value: '# SELECT et filtres\n\nCette section propose une synthese originale pour progresser en SQL. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Lire des donnees avec SELECT WHERE ORDER BY.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation PostgreSQL'}
+              - column: {name: source_url, value: 'https://www.postgresql.org/docs/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '2d401e3c-1f0e-5f8a-8c29-672816a23c18'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'Jointures'}
+              - column: {name: slug, value: 'jointures'}
+              - column: {name: summary, value: 'Relier des tables avec des cles.'}
+              - column: {name: content, value: '# Jointures\n\nCette section propose une synthese originale pour progresser en SQL. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Relier des tables avec des cles.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 12}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation PostgreSQL'}
+              - column: {name: source_url, value: 'https://www.postgresql.org/docs/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'f74adabc-e0ba-501f-a970-d144b579d7ce'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'Transactions'}
+              - column: {name: slug, value: 'transactions'}
+              - column: {name: summary, value: 'Proteger la coherence des donnees.'}
+              - column: {name: content, value: '# Transactions\n\nCette section propose une synthese originale pour progresser en SQL. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Proteger la coherence des donnees.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 13}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation PostgreSQL'}
+              - column: {name: source_url, value: 'https://www.postgresql.org/docs/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '091bd8b5-15ec-5307-b25a-ce9b1f3224cd'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Creer une frame'}
+              - column: {name: slug, value: 'creer-une-frame'}
+              - column: {name: summary, value: 'Structurer un ecran de travail clair.'}
+              - column: {name: content, value: '# Creer une frame\n\nCette section propose une synthese originale pour progresser en Figma et wireframes. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Structurer un ecran de travail clair.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Figma'}
+              - column: {name: source_url, value: 'https://help.figma.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'eac5edfd-683a-5ed6-b821-cc321c55ef01'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Construire un wireframe'}
+              - column: {name: slug, value: 'construire-un-wireframe'}
+              - column: {name: summary, value: 'Poser une interface avant le code.'}
+              - column: {name: content, value: '# Construire un wireframe\n\nCette section propose une synthese originale pour progresser en Figma et wireframes. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Poser une interface avant le code.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Figma'}
+              - column: {name: source_url, value: 'https://help.figma.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '478b870a-2324-57f3-a854-1a232a88bc13'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Composants'}
+              - column: {name: slug, value: 'composants'}
+              - column: {name: summary, value: 'Reutiliser des blocs coherent dans la maquette.'}
+              - column: {name: content, value: '# Composants\n\nCette section propose une synthese originale pour progresser en Figma et wireframes. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Reutiliser des blocs coherent dans la maquette.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 12}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Figma'}
+              - column: {name: source_url, value: 'https://help.figma.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '7c9b4812-3cad-5ae2-9e68-8d360219a81b'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Grilles et hierarchie visuelle'}
+              - column: {name: slug, value: 'grilles-et-hierarchie-visuelle'}
+              - column: {name: summary, value: 'Organiser espace, alignements et priorites.'}
+              - column: {name: content, value: '# Grilles et hierarchie visuelle\n\nCette section propose une synthese originale pour progresser en Figma et wireframes. Consulte la source officielle pour verifier la syntaxe et les bonnes pratiques.'}
+              - column: {name: description, value: 'Organiser espace, alignements et priorites.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 13}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Figma'}
+              - column: {name: source_url, value: 'https://help.figma.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}

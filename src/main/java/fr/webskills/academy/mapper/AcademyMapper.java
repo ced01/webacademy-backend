@@ -1,12 +1,20 @@
 package fr.webskills.academy.mapper;
 
 import fr.webskills.academy.domain.*;
+import fr.webskills.academy.domain.enums.PublicationStatus;
 import fr.webskills.academy.dto.LearningDtos.*;
+import fr.webskills.academy.repository.LearningSectionRepository;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AcademyMapper {
+    private final LearningSectionRepository sections;
+
+    public AcademyMapper(LearningSectionRepository sections) {
+        this.sections = sections;
+    }
+
     public LearningDomainResponse toDomainResponse(LearningDomain d) {
         return new LearningDomainResponse(
                 d.getId(),
@@ -20,19 +28,62 @@ public class AcademyMapper {
                 d.getStatus(),
                 d.getCreatedAt(),
                 d.getUpdatedAt(),
-                0);
+                sections.countByDomainId(d.getId()),
+                sections
+                        .findByDomainIdAndStatusOrderByDisplayOrderAsc(
+                                d.getId(), PublicationStatus.PUBLISHED)
+                        .stream()
+                        .map(s -> s.getLevel().getLabel())
+                        .distinct()
+                        .toList());
     }
 
     public LearningSectionResponse toSectionResponse(LearningSection s) {
         return new LearningSectionResponse(
                 s.getId(),
                 s.getDomain().getId(),
+                s.getDomain().getSlug(),
                 s.getTitle(),
                 s.getSlug(),
+                s.getSummary(),
+                s.getContent(),
                 s.getDescription(),
+                s.getLevel(),
+                s.getLevel().getLabel(),
                 s.getDisplayOrder(),
+                s.getVideoUrl(),
+                s.getSourceUrl(),
+                s.getSourceName(),
+                s.getSourceVerifiedAt(),
                 s.getStatus(),
-                0);
+                s.getLessons().size(),
+                null,
+                null);
+    }
+
+    public LearningSectionResponse toSectionResponse(
+            LearningSection s, String previousSlug, String nextSlug) {
+        LearningSectionResponse base = toSectionResponse(s);
+        return new LearningSectionResponse(
+                base.id(),
+                base.domainId(),
+                base.domainSlug(),
+                base.title(),
+                base.slug(),
+                base.summary(),
+                base.content(),
+                base.description(),
+                base.level(),
+                base.levelLabel(),
+                base.displayOrder(),
+                base.videoUrl(),
+                base.sourceUrl(),
+                base.sourceName(),
+                base.sourceVerifiedAt(),
+                base.status(),
+                base.lessonCount(),
+                previousSlug,
+                nextSlug);
     }
 
     public LessonSummaryResponse toLessonSummary(Lesson l) {
@@ -85,14 +136,15 @@ public class AcademyMapper {
     }
 
     public AccessCodeAdminResponse toAccessCodeResponse(AccessCode c) {
+        User creator = c.getCreatedBy();
         return new AccessCodeAdminResponse(
                 c.getId(),
+                c.getCode(),
                 c.getLabel(),
                 c.isActive(),
-                c.getExpiresAt(),
-                c.getMaxUses(),
-                c.getUsageCount(),
-                c.getLastUsedAt(),
+                c.getRevokedAt(),
+                creator == null ? null : creator.getId(),
+                creator == null ? null : creator.getEmail(),
                 c.getCreatedAt(),
                 c.getUpdatedAt());
     }

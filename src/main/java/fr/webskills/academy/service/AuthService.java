@@ -6,8 +6,6 @@ import fr.webskills.academy.dto.AuthDtos.*;
 import fr.webskills.academy.exception.*;
 import fr.webskills.academy.repository.*;
 import fr.webskills.academy.security.*;
-import java.time.Instant;
-import java.util.UUID;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,27 +34,28 @@ public class AuthService {
 
     @Transactional
     public AuthResponse authenticateWithCode(String rawCode) {
-        AccessCode code =
-                codeRepo.findAll().stream()
-                        .filter(c -> encoder.matches(rawCode, c.getCodeHash()))
-                        .findFirst()
-                        .orElseThrow(
-                                () ->
-                                        new InvalidAccessCodeException(
-                                                "Le code d’accès est invalide"));
-        if (!code.isActive())
-            throw new DisabledAccessCodeException("Le code d’accès est désactivé");
-        if (code.getExpiresAt() != null && code.getExpiresAt().isBefore(Instant.now()))
-            throw new ExpiredAccessCodeException("Le code d’accès est expiré");
-        if (code.getMaxUses() != null && code.getUsageCount() >= code.getMaxUses())
-            throw new AccessCodeUsageLimitReachedException(
-                    "La limite d’utilisation du code est atteinte");
-        code.setUsageCount(code.getUsageCount() + 1);
-        code.setLastUsedAt(Instant.now());
+        validateAccessCode(rawCode);
         User user = new User();
-        user.setEmail("learner-" + UUID.randomUUID() + "@access.local");
+        user.setEmail("learner-" + java.util.UUID.randomUUID() + "@access.local");
         user.setFirstName("Apprenant");
-        user.setLastName(code.getLabel());
+        user.setLastName("WebSkills");
+        user.setRole(Role.LEARNER);
+        user.setEnabled(true);
+        userRepo.save(user);
+        return new AuthResponse(jwt.generate(user), "Bearer", user.getRole(), user.getId());
+    }
+
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        validateAccessCode(request.accessCode());
+        if (userRepo.findByEmail(request.email()).isPresent()) {
+            throw new IllegalArgumentException("Un compte existe déjà avec cet email");
+        }
+        User user = new User();
+        user.setEmail(request.email());
+        user.setPassword(encoder.encode(request.password()));
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
         user.setRole(Role.LEARNER);
         user.setEnabled(true);
         userRepo.save(user);
@@ -70,8 +69,9 @@ public class AuthService {
         User user =
                 userRepo.findByEmail(request.email())
                         .orElseThrow(() -> new UnauthorizedException("Identifiants invalides"));
-        if (!user.isEnabled() || user.getRole() != Role.ADMIN)
+        if (!user.isEnabled() || user.getRole() != Role.ADMIN) {
             throw new ForbiddenException("Accès administrateur requis");
+        }
         return new AuthResponse(jwt.generate(user), "Bearer", user.getRole(), user.getId());
     }
 
@@ -79,5 +79,28 @@ public class AuthService {
         User u = details.user();
         return new MeResponse(
                 u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(), u.getRole());
+    }
+
+    private AccessCode validateAccessCode(String rawCode) {
+        AccessCode code =
+                codeRepo.findByCode(rawCode)
+                        .orElseGet(
+                                () ->
+                                        codeRepo.findAll().stream()
+                                                .filter(
+                                                        c ->
+                                                                c.getCodeHash() != null
+                                                                        && encoder.matches(
+                                                                                rawCode,
+                                                                                c.getCodeHash()))
+                                                .findFirst()
+                                                .orElseThrow(
+                                                        () ->
+                                                                new InvalidAccessCodeException(
+                                                                        "Le code d’accès est invalide")));
+        if (!code.isUsable()) {
+            throw new DisabledAccessCodeException("Le code d’accès est révoqué ou désactivé");
+        }
+        return code;
     }
 }

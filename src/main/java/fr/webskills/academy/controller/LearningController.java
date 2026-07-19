@@ -15,12 +15,12 @@ public class LearningController {
         this.content = content;
     }
 
-    @GetMapping("/domains")
+    @GetMapping({"/domains", "/learning-domains"})
     List<LearningDomainResponse> domains() {
         return content.publicDomains();
     }
 
-    @GetMapping("/domains/{slug}")
+    @GetMapping({"/domains/{slug}", "/learning-domains/{slug}"})
     LearningDomainResponse domain(@PathVariable String slug) {
         return content.getDomain(slug);
     }
@@ -30,9 +30,20 @@ public class LearningController {
         return content.sectionsForDomain(domainId, false);
     }
 
+    @GetMapping("/learning-domains/{domainSlug}/sections")
+    List<LearningSectionResponse> sectionsByDomainSlug(@PathVariable String domainSlug) {
+        return content.sectionsForDomainSlug(domainSlug);
+    }
+
     @GetMapping("/sections/{slug}")
     LearningSectionResponse section(@PathVariable String slug) {
         return content.getSection(slug);
+    }
+
+    @GetMapping("/learning-domains/{domainSlug}/sections/{sectionSlug}")
+    LearningSectionResponse sectionInDomain(
+            @PathVariable String domainSlug, @PathVariable String sectionSlug) {
+        return content.getSection(domainSlug, sectionSlug);
     }
 
     @GetMapping("/sections/{sectionId}/lessons")
