@@ -1,0 +1,1078 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-frontend-audit-complete-learning-content
+      author: hermes
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+              UPDATE learning_sections s
+              SET content = '# ' || s.title || CHR(10) || CHR(10) ||
+              '## Synthèse pédagogique' || CHR(10) ||
+              COALESCE(s.summary, s.description, 'Section pédagogique progressive.') || ' Cette synthèse originale résume les notions clés, sans copier la documentation.' || CHR(10) || CHR(10) ||
+              '## Exemple simple' || CHR(10) ||
+              'Créer un exemple minimal, vérifier le résultat, puis ajouter une seule notion à la fois.' || CHR(10) || CHR(10) ||
+              '## Bonnes pratiques' || CHR(10) ||
+              '- Utiliser des noms explicites.' || CHR(10) || '- Tester un cas simple et un cas limite.' || CHR(10) || '- Garder un lien vers la source officielle.' || CHR(10) || CHR(10) ||
+              '## Erreurs fréquentes' || CHR(10) ||
+              '- Copier sans comprendre.' || CHR(10) || '- Mélanger trop de notions dans un exercice.' || CHR(10) || CHR(10) ||
+              '## Liens utiles' || CHR(10) || '- ' || COALESCE(s.source_name, 'Documentation officielle') || ': ' || COALESCE(s.source_url, 'https://developer.mozilla.org/fr/'),
+              source_name = CASE d.slug
+                WHEN 'html' THEN 'MDN HTML / WHATWG HTML'
+                WHEN 'css' THEN 'MDN CSS / W3C CSS'
+                WHEN 'javascript' THEN 'MDN JavaScript / ECMAScript'
+                WHEN 'php' THEN 'php.net'
+                WHEN 'sql' THEN 'PostgreSQL / MySQL'
+                WHEN 'figma-wireframes' THEN 'Figma Help Center'
+                ELSE COALESCE(s.source_name, 'Documentation officielle') END,
+              source_url = CASE d.slug
+                WHEN 'html' THEN 'https://developer.mozilla.org/fr/docs/Web/HTML'
+                WHEN 'css' THEN 'https://developer.mozilla.org/fr/docs/Web/CSS'
+                WHEN 'javascript' THEN 'https://developer.mozilla.org/fr/docs/Web/JavaScript'
+                WHEN 'php' THEN 'https://www.php.net/manual/fr/'
+                WHEN 'sql' THEN 'https://www.postgresql.org/docs/'
+                WHEN 'figma-wireframes' THEN 'https://help.figma.com/'
+                ELSE s.source_url END,
+              source_verified_at = '2026-07-19T00:00:00'
+              FROM learning_domains d
+              WHERE s.domain_id = d.id;
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '77777777-7777-7777-7777-777777777777'}
+              - column: {name: name, value: 'Java'}
+              - column: {name: slug, value: 'java'}
+              - column: {name: short_description, value: 'Programmation orientée objet et JVM'}
+              - column: {name: description, value: 'Syntaxe Java, classes, collections, exceptions et bases solides pour aller vers Spring.'}
+              - column: {name: icon, value: 'Java'}
+              - column: {name: display_order, valueNumeric: 7}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'ae9d4910-5fae-50e1-83ec-f7515a730f4d'}
+              - column: {name: domain_id, value: '77777777-7777-7777-7777-777777777777'}
+              - column: {name: title, value: 'Syntaxe et types'}
+              - column: {name: slug, value: 'java-syntaxe-et-types'}
+              - column: {name: summary, value: 'Déclarer variables, méthodes et structures de contrôle.'}
+              - column: {name: content, value: '# Syntaxe et types
+
+## Synthèse pédagogique
+Cette section explique syntaxe et types dans le domaine Java avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation Java Oracle: https://docs.oracle.com/en/java/
+- OpenJDK: https://openjdk.org/'}
+              - column: {name: description, value: 'Déclarer variables, méthodes et structures de contrôle.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Java Oracle / OpenJDK'}
+              - column: {name: source_url, value: 'https://docs.oracle.com/en/java/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd30012f1-7040-5623-a40c-6971e67850a2'}
+              - column: {name: domain_id, value: '77777777-7777-7777-7777-777777777777'}
+              - column: {name: title, value: 'Classes et objets'}
+              - column: {name: slug, value: 'java-classes-objets'}
+              - column: {name: summary, value: 'Modéliser données et comportements avec encapsulation.'}
+              - column: {name: content, value: '# Classes et objets
+
+## Synthèse pédagogique
+Cette section explique classes et objets dans le domaine Java avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation Java Oracle: https://docs.oracle.com/en/java/
+- OpenJDK: https://openjdk.org/'}
+              - column: {name: description, value: 'Modéliser données et comportements avec encapsulation.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Java Oracle / OpenJDK'}
+              - column: {name: source_url, value: 'https://docs.oracle.com/en/java/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '2e984872-acc0-57d6-935b-c36f7173fa86'}
+              - column: {name: domain_id, value: '77777777-7777-7777-7777-777777777777'}
+              - column: {name: title, value: 'Collections'}
+              - column: {name: slug, value: 'java-collections'}
+              - column: {name: summary, value: 'Choisir List, Set ou Map et parcourir proprement les données.'}
+              - column: {name: content, value: '# Collections
+
+## Synthèse pédagogique
+Cette section explique collections dans le domaine Java avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation Java Oracle: https://docs.oracle.com/en/java/
+- OpenJDK: https://openjdk.org/'}
+              - column: {name: description, value: 'Choisir List, Set ou Map et parcourir proprement les données.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Java Oracle / OpenJDK'}
+              - column: {name: source_url, value: 'https://docs.oracle.com/en/java/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'b2d24b86-9fb8-5116-ae0b-f32f9979c125'}
+              - column: {name: domain_id, value: '77777777-7777-7777-7777-777777777777'}
+              - column: {name: title, value: 'Exceptions'}
+              - column: {name: slug, value: 'java-exceptions'}
+              - column: {name: summary, value: 'Signaler et traiter les erreurs sans masquer la cause.'}
+              - column: {name: content, value: '# Exceptions
+
+## Synthèse pédagogique
+Cette section explique exceptions dans le domaine Java avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation Java Oracle: https://docs.oracle.com/en/java/
+- OpenJDK: https://openjdk.org/'}
+              - column: {name: description, value: 'Signaler et traiter les erreurs sans masquer la cause.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 4}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Java Oracle / OpenJDK'}
+              - column: {name: source_url, value: 'https://docs.oracle.com/en/java/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'a88ef2bb-26e8-5ce0-a8ce-514b9e226799'}
+              - column: {name: domain_id, value: '77777777-7777-7777-7777-777777777777'}
+              - column: {name: title, value: 'Streams'}
+              - column: {name: slug, value: 'java-streams'}
+              - column: {name: summary, value: 'Transformer des collections avec des pipelines lisibles.'}
+              - column: {name: content, value: '# Streams
+
+## Synthèse pédagogique
+Cette section explique streams dans le domaine Java avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation Java Oracle: https://docs.oracle.com/en/java/
+- OpenJDK: https://openjdk.org/'}
+              - column: {name: description, value: 'Transformer des collections avec des pipelines lisibles.'}
+              - column: {name: level, value: 'ADVANCED'}
+              - column: {name: display_order, valueNumeric: 5}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation Java Oracle / OpenJDK'}
+              - column: {name: source_url, value: 'https://docs.oracle.com/en/java/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '88888888-8888-8888-8888-888888888888'}
+              - column: {name: name, value: 'Spring Boot'}
+              - column: {name: slug, value: 'spring-boot'}
+              - column: {name: short_description, value: 'Applications Java web modernes'}
+              - column: {name: description, value: 'Créer des API Spring Boot avec configuration, validation, tests et persistance.'}
+              - column: {name: icon, value: 'Boot'}
+              - column: {name: display_order, valueNumeric: 8}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '5685fc0f-3605-57c9-a487-631bbaf784be'}
+              - column: {name: domain_id, value: '88888888-8888-8888-8888-888888888888'}
+              - column: {name: title, value: 'Démarrer une application Spring Boot'}
+              - column: {name: slug, value: 'spring-boot-demarrage'}
+              - column: {name: summary, value: 'Comprendre starters, auto-configuration et propriétés.'}
+              - column: {name: content, value: '# Démarrer une application Spring Boot
+
+## Synthèse pédagogique
+Cette section explique démarrer une application spring boot dans le domaine Spring Boot avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Spring Boot Reference: https://docs.spring.io/spring-boot/index.html
+- Spring Guides: https://spring.io/guides'}
+              - column: {name: description, value: 'Comprendre starters, auto-configuration et propriétés.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Spring Boot Reference / Spring Guides'}
+              - column: {name: source_url, value: 'https://docs.spring.io/spring-boot/index.html'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd8d59365-45a2-5519-8354-e7c568320dd2'}
+              - column: {name: domain_id, value: '88888888-8888-8888-8888-888888888888'}
+              - column: {name: title, value: 'Contrôleurs REST'}
+              - column: {name: slug, value: 'spring-boot-rest-controllers'}
+              - column: {name: summary, value: 'Exposer des ressources HTTP lisibles et testables.'}
+              - column: {name: content, value: '# Contrôleurs REST
+
+## Synthèse pédagogique
+Cette section explique contrôleurs rest dans le domaine Spring Boot avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Spring Boot Reference: https://docs.spring.io/spring-boot/index.html
+- Spring Guides: https://spring.io/guides'}
+              - column: {name: description, value: 'Exposer des ressources HTTP lisibles et testables.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Spring Boot Reference / Spring Guides'}
+              - column: {name: source_url, value: 'https://docs.spring.io/spring-boot/index.html'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'ee2d5d75-a835-5e7a-95c9-b226ad09b216'}
+              - column: {name: domain_id, value: '88888888-8888-8888-8888-888888888888'}
+              - column: {name: title, value: 'Validation et erreurs'}
+              - column: {name: slug, value: 'spring-boot-validation'}
+              - column: {name: summary, value: 'Valider les DTO et retourner des messages utiles.'}
+              - column: {name: content, value: '# Validation et erreurs
+
+## Synthèse pédagogique
+Cette section explique validation et erreurs dans le domaine Spring Boot avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Spring Boot Reference: https://docs.spring.io/spring-boot/index.html
+- Spring Guides: https://spring.io/guides'}
+              - column: {name: description, value: 'Valider les DTO et retourner des messages utiles.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Spring Boot Reference / Spring Guides'}
+              - column: {name: source_url, value: 'https://docs.spring.io/spring-boot/index.html'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '5412a78f-8c8a-5cba-a2a6-12f76d943407'}
+              - column: {name: domain_id, value: '88888888-8888-8888-8888-888888888888'}
+              - column: {name: title, value: 'Persistance Spring Data JPA'}
+              - column: {name: slug, value: 'spring-boot-data-jpa'}
+              - column: {name: summary, value: 'Créer repositories, entités et transactions cohérentes.'}
+              - column: {name: content, value: '# Persistance Spring Data JPA
+
+## Synthèse pédagogique
+Cette section explique persistance spring data jpa dans le domaine Spring Boot avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Spring Boot Reference: https://docs.spring.io/spring-boot/index.html
+- Spring Guides: https://spring.io/guides'}
+              - column: {name: description, value: 'Créer repositories, entités et transactions cohérentes.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 4}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Spring Boot Reference / Spring Guides'}
+              - column: {name: source_url, value: 'https://docs.spring.io/spring-boot/index.html'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'b2b212ba-f00f-5690-823f-d13538ae36ef'}
+              - column: {name: domain_id, value: '88888888-8888-8888-8888-888888888888'}
+              - column: {name: title, value: 'Tests Spring Boot'}
+              - column: {name: slug, value: 'spring-boot-tests'}
+              - column: {name: summary, value: 'Tester contrôleurs et services sans fragiliser la suite.'}
+              - column: {name: content, value: '# Tests Spring Boot
+
+## Synthèse pédagogique
+Cette section explique tests spring boot dans le domaine Spring Boot avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Spring Boot Reference: https://docs.spring.io/spring-boot/index.html
+- Spring Guides: https://spring.io/guides'}
+              - column: {name: description, value: 'Tester contrôleurs et services sans fragiliser la suite.'}
+              - column: {name: level, value: 'ADVANCED'}
+              - column: {name: display_order, valueNumeric: 5}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Spring Boot Reference / Spring Guides'}
+              - column: {name: source_url, value: 'https://docs.spring.io/spring-boot/index.html'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '99999999-9999-9999-9999-999999999999'}
+              - column: {name: name, value: 'React'}
+              - column: {name: slug, value: 'react'}
+              - column: {name: short_description, value: 'Interfaces composées en composants'}
+              - column: {name: description, value: 'JSX, props, state, hooks, formulaires et navigation avec les recommandations React actuelles.'}
+              - column: {name: icon, value: '⚛'}
+              - column: {name: display_order, valueNumeric: 9}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '227e7277-e326-5ba6-a5c3-078d776041c4'}
+              - column: {name: domain_id, value: '99999999-9999-9999-9999-999999999999'}
+              - column: {name: title, value: 'JSX et composants'}
+              - column: {name: slug, value: 'react-jsx-composants'}
+              - column: {name: summary, value: 'Découper une interface en composants explicites.'}
+              - column: {name: content, value: '# JSX et composants
+
+## Synthèse pédagogique
+Cette section explique jsx et composants dans le domaine React avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle React: https://react.dev/learn
+- React API Reference: https://react.dev/reference/react'}
+              - column: {name: description, value: 'Découper une interface en composants explicites.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle React / React API Reference'}
+              - column: {name: source_url, value: 'https://react.dev/learn'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '25f079bd-abc8-5718-9975-71644ade9c46'}
+              - column: {name: domain_id, value: '99999999-9999-9999-9999-999999999999'}
+              - column: {name: title, value: 'Props et state'}
+              - column: {name: slug, value: 'react-props-state'}
+              - column: {name: summary, value: 'Faire circuler les données et gérer les interactions.'}
+              - column: {name: content, value: '# Props et state
+
+## Synthèse pédagogique
+Cette section explique props et state dans le domaine React avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle React: https://react.dev/learn
+- React API Reference: https://react.dev/reference/react'}
+              - column: {name: description, value: 'Faire circuler les données et gérer les interactions.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle React / React API Reference'}
+              - column: {name: source_url, value: 'https://react.dev/learn'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'ece0636d-7ba6-5339-ba78-a478f3412bb4'}
+              - column: {name: domain_id, value: '99999999-9999-9999-9999-999999999999'}
+              - column: {name: title, value: 'Hooks et effets'}
+              - column: {name: slug, value: 'react-hooks-effets'}
+              - column: {name: summary, value: 'Utiliser useEffect seulement pour synchroniser avec un système externe.'}
+              - column: {name: content, value: '# Hooks et effets
+
+## Synthèse pédagogique
+Cette section explique hooks et effets dans le domaine React avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle React: https://react.dev/learn
+- React API Reference: https://react.dev/reference/react'}
+              - column: {name: description, value: 'Utiliser useEffect seulement pour synchroniser avec un système externe.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle React / React API Reference'}
+              - column: {name: source_url, value: 'https://react.dev/learn'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd5327e4d-b70e-5395-b3d7-bf5b3188ecee'}
+              - column: {name: domain_id, value: '99999999-9999-9999-9999-999999999999'}
+              - column: {name: title, value: 'Formulaires contrôlés'}
+              - column: {name: slug, value: 'react-formulaires'}
+              - column: {name: summary, value: 'Construire des formulaires accessibles et validables.'}
+              - column: {name: content, value: '# Formulaires contrôlés
+
+## Synthèse pédagogique
+Cette section explique formulaires contrôlés dans le domaine React avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle React: https://react.dev/learn
+- React API Reference: https://react.dev/reference/react'}
+              - column: {name: description, value: 'Construire des formulaires accessibles et validables.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 4}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle React / React API Reference'}
+              - column: {name: source_url, value: 'https://react.dev/learn'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '422e9a0d-3cf5-59c9-85ed-1c10a70ac5cc'}
+              - column: {name: domain_id, value: '99999999-9999-9999-9999-999999999999'}
+              - column: {name: title, value: 'Performance React'}
+              - column: {name: slug, value: 'react-performance'}
+              - column: {name: summary, value: 'Mémoïser avec parcimonie et découper le code utilement.'}
+              - column: {name: content, value: '# Performance React
+
+## Synthèse pédagogique
+Cette section explique performance react dans le domaine React avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle React: https://react.dev/learn
+- React API Reference: https://react.dev/reference/react'}
+              - column: {name: description, value: 'Mémoïser avec parcimonie et découper le code utilement.'}
+              - column: {name: level, value: 'ADVANCED'}
+              - column: {name: display_order, valueNumeric: 5}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle React / React API Reference'}
+              - column: {name: source_url, value: 'https://react.dev/learn'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}
+              - column: {name: name, value: 'Git'}
+              - column: {name: slug, value: 'git'}
+              - column: {name: short_description, value: 'Versionner et collaborer'}
+              - column: {name: description, value: 'Commits, branches, remotes, merge, rebase et résolution de conflits avec Git.'}
+              - column: {name: icon, value: 'Git'}
+              - column: {name: display_order, valueNumeric: 10}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd91a2e30-b9ab-5205-a2b3-c7cade140b8a'}
+              - column: {name: domain_id, value: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}
+              - column: {name: title, value: 'Commits'}
+              - column: {name: slug, value: 'git-commits'}
+              - column: {name: summary, value: 'Produire des commits atomiques et compréhensibles.'}
+              - column: {name: content, value: '# Commits
+
+## Synthèse pédagogique
+Cette section explique commits dans le domaine Git avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Git: https://git-scm.com/docs
+- Pro Git: https://git-scm.com/book/fr/v2'}
+              - column: {name: description, value: 'Produire des commits atomiques et compréhensibles.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Git / Pro Git'}
+              - column: {name: source_url, value: 'https://git-scm.com/docs'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '122b310d-3a92-52ef-80b3-2fe4c7de2002'}
+              - column: {name: domain_id, value: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}
+              - column: {name: title, value: 'Branches'}
+              - column: {name: slug, value: 'git-branches'}
+              - column: {name: summary, value: 'Isoler une évolution ou une correction.'}
+              - column: {name: content, value: '# Branches
+
+## Synthèse pédagogique
+Cette section explique branches dans le domaine Git avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Git: https://git-scm.com/docs
+- Pro Git: https://git-scm.com/book/fr/v2'}
+              - column: {name: description, value: 'Isoler une évolution ou une correction.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Git / Pro Git'}
+              - column: {name: source_url, value: 'https://git-scm.com/docs'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'a92a10c6-90b7-516a-a394-271a41684ccf'}
+              - column: {name: domain_id, value: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}
+              - column: {name: title, value: 'Merge et rebase'}
+              - column: {name: slug, value: 'git-merge-rebase'}
+              - column: {name: summary, value: 'Intégrer des changements en maîtrisant l historique.'}
+              - column: {name: content, value: '# Merge et rebase
+
+## Synthèse pédagogique
+Cette section explique merge et rebase dans le domaine Git avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Git: https://git-scm.com/docs
+- Pro Git: https://git-scm.com/book/fr/v2'}
+              - column: {name: description, value: 'Intégrer des changements en maîtrisant l historique.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Git / Pro Git'}
+              - column: {name: source_url, value: 'https://git-scm.com/docs'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd50e14e0-75fd-54e0-b168-96d61ab7da3f'}
+              - column: {name: domain_id, value: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}
+              - column: {name: title, value: 'Conflits'}
+              - column: {name: slug, value: 'git-conflits'}
+              - column: {name: summary, value: 'Résoudre les conflits en comprenant les intentions.'}
+              - column: {name: content, value: '# Conflits
+
+## Synthèse pédagogique
+Cette section explique conflits dans le domaine Git avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Git: https://git-scm.com/docs
+- Pro Git: https://git-scm.com/book/fr/v2'}
+              - column: {name: description, value: 'Résoudre les conflits en comprenant les intentions.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 4}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Git / Pro Git'}
+              - column: {name: source_url, value: 'https://git-scm.com/docs'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'aee58afc-e08a-53a6-8e4a-471109fab5c2'}
+              - column: {name: domain_id, value: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}
+              - column: {name: title, value: 'Collaboration distante'}
+              - column: {name: slug, value: 'git-collaboration'}
+              - column: {name: summary, value: 'Utiliser remotes, pull requests et revues.'}
+              - column: {name: content, value: '# Collaboration distante
+
+## Synthèse pédagogique
+Cette section explique collaboration distante dans le domaine Git avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Git: https://git-scm.com/docs
+- Pro Git: https://git-scm.com/book/fr/v2'}
+              - column: {name: description, value: 'Utiliser remotes, pull requests et revues.'}
+              - column: {name: level, value: 'ADVANCED'}
+              - column: {name: display_order, valueNumeric: 5}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Git / Pro Git'}
+              - column: {name: source_url, value: 'https://git-scm.com/docs'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'}
+              - column: {name: name, value: 'Docker'}
+              - column: {name: slug, value: 'docker'}
+              - column: {name: short_description, value: 'Conteneuriser les environnements'}
+              - column: {name: description, value: 'Images, conteneurs, volumes, réseaux, Dockerfile et Compose pour des environnements reproductibles.'}
+              - column: {name: icon, value: '🐳'}
+              - column: {name: display_order, valueNumeric: 11}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '373c1182-d27e-561e-a691-b944538060cf'}
+              - column: {name: domain_id, value: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'}
+              - column: {name: title, value: 'Images et conteneurs'}
+              - column: {name: slug, value: 'docker-images-conteneurs'}
+              - column: {name: summary, value: 'Comprendre la différence entre modèle et instance.'}
+              - column: {name: content, value: '# Images et conteneurs
+
+## Synthèse pédagogique
+Cette section explique images et conteneurs dans le domaine Docker avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Docker: https://docs.docker.com/
+- Dockerfile reference: https://docs.docker.com/reference/dockerfile/'}
+              - column: {name: description, value: 'Comprendre la différence entre modèle et instance.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Docker / Dockerfile reference'}
+              - column: {name: source_url, value: 'https://docs.docker.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '0ff2b905-d4ef-5bdb-bc50-3dff5ffd15e8'}
+              - column: {name: domain_id, value: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'}
+              - column: {name: title, value: 'Dockerfile'}
+              - column: {name: slug, value: 'dockerfile-bonnes-pratiques'}
+              - column: {name: summary, value: 'Construire des images petites et reproductibles.'}
+              - column: {name: content, value: '# Dockerfile
+
+## Synthèse pédagogique
+Cette section explique dockerfile dans le domaine Docker avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Docker: https://docs.docker.com/
+- Dockerfile reference: https://docs.docker.com/reference/dockerfile/'}
+              - column: {name: description, value: 'Construire des images petites et reproductibles.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Docker / Dockerfile reference'}
+              - column: {name: source_url, value: 'https://docs.docker.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'e566dcb6-51c5-5c36-a55f-592635aec8f2'}
+              - column: {name: domain_id, value: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'}
+              - column: {name: title, value: 'Volumes et réseaux'}
+              - column: {name: slug, value: 'docker-volumes-reseaux'}
+              - column: {name: summary, value: 'Persister les données et relier les services.'}
+              - column: {name: content, value: '# Volumes et réseaux
+
+## Synthèse pédagogique
+Cette section explique volumes et réseaux dans le domaine Docker avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Docker: https://docs.docker.com/
+- Dockerfile reference: https://docs.docker.com/reference/dockerfile/'}
+              - column: {name: description, value: 'Persister les données et relier les services.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Docker / Dockerfile reference'}
+              - column: {name: source_url, value: 'https://docs.docker.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '6df43de9-14f6-561a-8120-72ec02e26ea8'}
+              - column: {name: domain_id, value: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'}
+              - column: {name: title, value: 'Docker Compose'}
+              - column: {name: slug, value: 'docker-compose'}
+              - column: {name: summary, value: 'Orchestrer plusieurs services en développement.'}
+              - column: {name: content, value: '# Docker Compose
+
+## Synthèse pédagogique
+Cette section explique docker compose dans le domaine Docker avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Docker: https://docs.docker.com/
+- Dockerfile reference: https://docs.docker.com/reference/dockerfile/'}
+              - column: {name: description, value: 'Orchestrer plusieurs services en développement.'}
+              - column: {name: level, value: 'INTERMEDIATE'}
+              - column: {name: display_order, valueNumeric: 4}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Docker / Dockerfile reference'}
+              - column: {name: source_url, value: 'https://docs.docker.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '7e1cbf76-018a-5515-9507-de00974cb995'}
+              - column: {name: domain_id, value: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'}
+              - column: {name: title, value: 'Sécurité Docker'}
+              - column: {name: slug, value: 'docker-securite'}
+              - column: {name: summary, value: 'Limiter privilèges, secrets et surface d attaque.'}
+              - column: {name: content, value: '# Sécurité Docker
+
+## Synthèse pédagogique
+Cette section explique sécurité docker dans le domaine Docker avec une progression courte, pratique et vérifiable. Elle reformule les concepts essentiels sans recopier la documentation.
+
+## Exemple simple
+Commence par un exemple minimal, observe le résultat, puis ajoute une seule notion à la fois. Garde des noms explicites et vérifie le comportement attendu avant de complexifier.
+
+## Bonnes pratiques
+- Préférer la clarté à l astuce.
+- Tester avec un cas simple puis un cas limite.
+- Lire les messages d erreur complètement.
+- Conserver des liens vers les références officielles utilisées.
+
+## Erreurs fréquentes
+- Mélanger plusieurs objectifs dans le même exercice.
+- Copier un exemple sans comprendre les prérequis.
+- Oublier accessibilité, validation ou gestion d erreur selon le sujet.
+
+## Liens utiles
+- Documentation officielle Docker: https://docs.docker.com/
+- Dockerfile reference: https://docs.docker.com/reference/dockerfile/'}
+              - column: {name: description, value: 'Limiter privilèges, secrets et surface d attaque.'}
+              - column: {name: level, value: 'ADVANCED'}
+              - column: {name: display_order, valueNumeric: 5}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: source_name, value: 'Documentation officielle Docker / Dockerfile reference'}
+              - column: {name: source_url, value: 'https://docs.docker.com/'}
+              - column: {name: source_verified_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: created_at, valueDate: '2026-07-19T00:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-19T00:00:00'}

@@ -31,8 +31,11 @@ public class LearningController {
     }
 
     @GetMapping("/learning-domains/{domainSlug}/sections")
-    List<LearningSectionResponse> sectionsByDomainSlug(@PathVariable String domainSlug) {
-        return content.sectionsForDomainSlug(domainSlug);
+    List<LearningSectionResponse> sectionsByDomainSlug(
+            @PathVariable String domainSlug,
+            @RequestParam(required = false) String level,
+            @RequestParam(required = false) String q) {
+        return content.sectionsForDomainSlug(domainSlug, Level.fromQuery(level), q);
     }
 
     @GetMapping("/sections/{slug}")
@@ -57,8 +60,10 @@ public class LearningController {
     }
 
     @GetMapping("/search")
-    List<LessonSummaryResponse> search(
-            @RequestParam(required = false) String q, @RequestParam(required = false) Level level) {
-        return content.search(q, level);
+    List<LearningSectionResponse> search(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String level,
+            @RequestParam(required = false) String domain) {
+        return content.searchSections(q, Level.fromQuery(level), domain);
     }
 }

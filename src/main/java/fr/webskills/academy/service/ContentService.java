@@ -114,6 +114,11 @@ public class ContentService {
     }
 
     public List<LearningSectionResponse> sectionsForDomainSlug(String domainSlug) {
+        return sectionsForDomainSlug(domainSlug, null, null);
+    }
+
+    public List<LearningSectionResponse> sectionsForDomainSlug(
+            String domainSlug, Level level, String q) {
         LearningDomain d =
                 domains.findBySlug(domainSlug)
                         .filter(domain -> domain.getStatus() == PublicationStatus.PUBLISHED)
@@ -122,6 +127,7 @@ public class ContentService {
                 .findByDomainIdAndStatusOrderByDisplayOrderAsc(
                         d.getId(), PublicationStatus.PUBLISHED)
                 .stream()
+                .filter(section -> matchesSection(section, level, q))
                 .map(mapper::toSectionResponse)
                 .toList();
     }
@@ -260,15 +266,47 @@ public class ContentService {
         items.forEach(i -> lesson(i.id()).setDisplayOrder(i.displayOrder()));
     }
 
-    public List<LessonSummaryResponse> search(String q, Level level) {
-        String query = q == null ? "" : q;
-        return lessons
-                .findByStatusAndTitleContainingIgnoreCaseOrStatusAndSummaryContainingIgnoreCase(
-                        PublicationStatus.PUBLISHED, query, PublicationStatus.PUBLISHED, query)
-                .stream()
-                .filter(l -> level == null || l.getLevel() == level)
-                .map(mapper::toLessonSummary)
+    public List<LearningSectionResponse> searchSections(String q, Level level, String domainSlug) {
+        return sections.findAll().stream()
+                .filter(section -> section.getStatus() == PublicationStatus.PUBLISHED)
+                .filter(section -> section.getDomain().getStatus() == PublicationStatus.PUBLISHED)
+                .filter(
+                        section ->
+                                domainSlug == null
+                                        || domainSlug.isBlank()
+                                        || section.getDomain().getSlug().equals(domainSlug))
+                .filter(section -> matchesSection(section, level, q))
+                .sorted(
+                        Comparator.comparing(
+                                        (LearningSection section) ->
+                                                section.getDomain().getDisplayOrder())
+                                .thenComparing(LearningSection::getDisplayOrder)
+                                .thenComparing(LearningSection::getTitle))
+                .map(mapper::toSectionResponse)
                 .toList();
+    }
+
+    private boolean matchesSection(LearningSection section, Level level, String q) {
+        if (level != null && section.getLevel() != level) {
+            return false;
+        }
+        if (q == null || q.isBlank()) {
+            return true;
+        }
+        String query = normalizeSearchText(q);
+        return normalizeSearchText(section.getTitle()).contains(query)
+                || normalizeSearchText(section.getSummary()).contains(query)
+                || normalizeSearchText(section.getDescription()).contains(query)
+                || normalizeSearchText(section.getContent()).contains(query);
+    }
+
+    private String normalizeSearchText(String value) {
+        if (value == null) {
+            return "";
+        }
+        return Normalizer.normalize(value, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase(Locale.ROOT);
     }
 
     private void applyLesson(Lesson l, LessonRequest r) {

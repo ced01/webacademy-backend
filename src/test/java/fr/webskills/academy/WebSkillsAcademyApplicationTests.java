@@ -184,6 +184,23 @@ class WebSkillsAcademyApplicationTests {
     }
 
     @Test
+    void public_sections_accept_level_labels_and_search_filters() throws Exception {
+        mvc.perform(get("/api/v1/learning-domains/html/sections").param("level", "intermédiaire"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.title == 'HTML semantique')]").exists())
+                .andExpect(jsonPath("$[?(@.level == 'BEGINNER')]").doesNotExist());
+
+        mvc.perform(
+                        get("/api/v1/search")
+                                .param("domain", "html")
+                                .param("level", "Intermediate")
+                                .param("q", "semantique"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].domainSlug").value("html"))
+                .andExpect(jsonPath("$[0].level").value("INTERMEDIATE"));
+    }
+
+    @Test
     void update_progress_still_works() throws Exception {
         String token = learnerToken("PROGRESS-" + UUID.randomUUID());
         Lesson lesson = lessons.findAll().getFirst();
