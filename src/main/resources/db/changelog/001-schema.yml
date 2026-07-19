@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-schema
+      author: hermes
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+        - createTable:
+            tableName: users
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: email, type: varchar(255), constraints: {unique: true}}
+              - column: {name: password_hash, type: varchar(255)}
+              - column: {name: first_name, type: varchar(100)}
+              - column: {name: last_name, type: varchar(100)}
+              - column: {name: role, type: varchar(30), constraints: {nullable: false}}
+              - column: {name: enabled, type: boolean, defaultValueBoolean: true, constraints: {nullable: false}}
+              - column: {name: created_at, type: timestamp with time zone, constraints: {nullable: false}}
+              - column: {name: updated_at, type: timestamp with time zone, constraints: {nullable: false}}
+        - createTable:
+            tableName: access_codes
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: label, type: varchar(120), constraints: {nullable: false}}
+              - column: {name: code_hash, type: varchar(120), constraints: {nullable: false}}
+              - column: {name: active, type: boolean, defaultValueBoolean: true, constraints: {nullable: false}}
+              - column: {name: expires_at, type: timestamp with time zone}
+              - column: {name: max_uses, type: int}
+              - column: {name: usage_count, type: int, defaultValueNumeric: 0, constraints: {nullable: false}}
+              - column: {name: last_used_at, type: timestamp with time zone}
+              - column: {name: created_at, type: timestamp with time zone, constraints: {nullable: false}}
+              - column: {name: updated_at, type: timestamp with time zone, constraints: {nullable: false}}
+        - createTable:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: name, type: varchar(120), constraints: {nullable: false, unique: true}}
+              - column: {name: slug, type: varchar(140), constraints: {nullable: false, unique: true}}
+              - column: {name: short_description, type: varchar(300)}
+              - column: {name: description, type: text}
+              - column: {name: icon, type: varchar(255)}
+              - column: {name: cover_image, type: varchar(255)}
+              - column: {name: display_order, type: int, constraints: {nullable: false}}
+              - column: {name: status, type: varchar(30), constraints: {nullable: false}}
+              - column: {name: created_at, type: timestamp with time zone, constraints: {nullable: false}}
+              - column: {name: updated_at, type: timestamp with time zone, constraints: {nullable: false}}
+        - createIndex: {tableName: learning_domains, indexName: idx_learning_domains_slug, columns: [{column: {name: slug}}]}
+        - createTable:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: domain_id, type: uuid, constraints: {nullable: false, foreignKeyName: fk_section_domain, references: learning_domains(id)}}
+              - column: {name: title, type: varchar(180), constraints: {nullable: false}}
+              - column: {name: slug, type: varchar(180), constraints: {nullable: false}}
+              - column: {name: description, type: text}
+              - column: {name: display_order, type: int, constraints: {nullable: false}}
+              - column: {name: status, type: varchar(30), constraints: {nullable: false}}
+              - column: {name: created_at, type: timestamp with time zone, constraints: {nullable: false}}
+              - column: {name: updated_at, type: timestamp with time zone, constraints: {nullable: false}}
+        - addUniqueConstraint: {tableName: learning_sections, columnNames: "domain_id, slug", constraintName: uk_section_domain_slug}
+        - createIndex: {tableName: learning_sections, indexName: idx_sections_domain, columns: [{column: {name: domain_id}}]}
+        - createTable:
+            tableName: lessons
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: section_id, type: uuid, constraints: {nullable: false, foreignKeyName: fk_lesson_section, references: learning_sections(id)}}
+              - column: {name: title, type: varchar(180), constraints: {nullable: false}}
+              - column: {name: slug, type: varchar(180), constraints: {nullable: false}}
+              - column: {name: summary, type: varchar(500)}
+              - column: {name: content, type: text}
+              - column: {name: level, type: varchar(30), constraints: {nullable: false}}
+              - column: {name: estimated_duration_minutes, type: int}
+              - column: {name: display_order, type: int, constraints: {nullable: false}}
+              - column: {name: status, type: varchar(30), constraints: {nullable: false}}
+              - column: {name: created_at, type: timestamp with time zone, constraints: {nullable: false}}
+              - column: {name: updated_at, type: timestamp with time zone, constraints: {nullable: false}}
+        - addUniqueConstraint: {tableName: lessons, columnNames: "section_id, slug", constraintName: uk_lesson_section_slug}
+        - createIndex: {tableName: lessons, indexName: idx_lessons_section, columns: [{column: {name: section_id}}]}
+        - createTable:
+            tableName: lesson_resources
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: lesson_id, type: uuid, constraints: {nullable: false, foreignKeyName: fk_resource_lesson, references: lessons(id)}}
+              - column: {name: title, type: varchar(180), constraints: {nullable: false}}
+              - column: {name: type, type: varchar(30), constraints: {nullable: false}}
+              - column: {name: url, type: varchar(500), constraints: {nullable: false}}
+              - column: {name: description, type: text}
+              - column: {name: display_order, type: int, constraints: {nullable: false}}
+        - createTable:
+            tableName: learner_progress
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: user_id, type: uuid, constraints: {nullable: false, foreignKeyName: fk_progress_user, references: users(id)}}
+              - column: {name: lesson_id, type: uuid, constraints: {nullable: false, foreignKeyName: fk_progress_lesson, references: lessons(id)}}
+              - column: {name: completed, type: boolean, defaultValueBoolean: false, constraints: {nullable: false}}
+              - column: {name: progress_percentage, type: int, defaultValueNumeric: 0, constraints: {nullable: false}}
+              - column: {name: started_at, type: timestamp with time zone}
+              - column: {name: completed_at, type: timestamp with time zone}
+              - column: {name: last_viewed_at, type: timestamp with time zone}
+        - addUniqueConstraint: {tableName: learner_progress, columnNames: "user_id, lesson_id", constraintName: uk_progress_user_lesson}

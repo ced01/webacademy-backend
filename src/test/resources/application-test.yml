@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:webskills;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.yml
+app:
+  jwt:
+    secret: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    expiration: 86400000
+  frontend-url: http://localhost:5173
+  admin:
+    email: admin@test.local
+    password: Admin123!

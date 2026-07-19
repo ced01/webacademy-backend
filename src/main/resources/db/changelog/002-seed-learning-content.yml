@@ -1,0 +1,569 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-seed-learning-content
+      author: hermes
+      changes:
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: name, value: 'HTML'}
+              - column: {name: slug, value: 'html'}
+              - column: {name: short_description, value: 'Structure et sémantique du web'}
+              - column: {name: description, value: 'Apprendre les fondations HTML avec des pages accessibles, formulaires et balises sémantiques.'}
+              - column: {name: icon, value: '<>'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '2cf185d0-94dc-5ebb-a6fe-52726f340f08'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'Fondations'}
+              - column: {name: slug, value: 'html-fondations'}
+              - column: {name: description, value: 'Section exemple pour progresser en HTML.'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'ea47aa61-45cf-5259-a8bb-79502cb2c955'}
+              - column: {name: section_id, value: '2cf185d0-94dc-5ebb-a6fe-52726f340f08'}
+              - column: {name: title, value: 'structure document HTML'}
+              - column: {name: slug, value: 'structure-document-html'}
+              - column: {name: summary, value: 'Découvrir structure document HTML avec un exemple testable.'}
+              - column: {name: content, value: '# Structure document html\n\nObjectif : comprendre et pratiquer structure document HTML dans le contexte HTML.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'bcff4794-5bb0-514a-a1c1-221a63163943'}
+              - column: {name: section_id, value: '2cf185d0-94dc-5ebb-a6fe-52726f340f08'}
+              - column: {name: title, value: 'balises semantiques'}
+              - column: {name: slug, value: 'balises-semantiques'}
+              - column: {name: summary, value: 'Découvrir balises semantiques avec un exemple testable.'}
+              - column: {name: content, value: '# Balises semantiques\n\nObjectif : comprendre et pratiquer balises semantiques dans le contexte HTML.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'e4b6b1d8-1f54-5b35-8502-f33d6ec5e08f'}
+              - column: {name: section_id, value: '2cf185d0-94dc-5ebb-a6fe-52726f340f08'}
+              - column: {name: title, value: 'formulaires'}
+              - column: {name: slug, value: 'formulaires'}
+              - column: {name: summary, value: 'Découvrir formulaires avec un exemple testable.'}
+              - column: {name: content, value: '# Formulaires\n\nObjectif : comprendre et pratiquer formulaires dans le contexte HTML.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '95d17f51-f805-5610-9864-23be1a0f92fc'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'Pratique guidee'}
+              - column: {name: slug, value: 'html-pratique-guidee'}
+              - column: {name: description, value: 'Section exemple pour progresser en HTML.'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '0baa78a8-79fd-5eb4-8b8f-8c0062372051'}
+              - column: {name: domain_id, value: '11111111-1111-1111-1111-111111111111'}
+              - column: {name: title, value: 'Bonnes pratiques'}
+              - column: {name: slug, value: 'html-bonnes-pratiques'}
+              - column: {name: description, value: 'Section exemple pour progresser en HTML.'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: name, value: 'CSS'}
+              - column: {name: slug, value: 'css'}
+              - column: {name: short_description, value: 'Styles, responsive et mise en page'}
+              - column: {name: description, value: 'Sélecteurs, cascade, box model, Flexbox et Grid pour créer des interfaces modernes.'}
+              - column: {name: icon, value: '{}'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '3e57c0c3-0d97-5715-b5cf-4c60aec5ae57'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Fondations'}
+              - column: {name: slug, value: 'css-fondations'}
+              - column: {name: description, value: 'Section exemple pour progresser en CSS.'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '0e44017c-eb46-5143-acfa-e9e950c3e909'}
+              - column: {name: section_id, value: '3e57c0c3-0d97-5715-b5cf-4c60aec5ae57'}
+              - column: {name: title, value: 'selecteurs'}
+              - column: {name: slug, value: 'selecteurs'}
+              - column: {name: summary, value: 'Découvrir selecteurs avec un exemple testable.'}
+              - column: {name: content, value: '# Selecteurs\n\nObjectif : comprendre et pratiquer selecteurs dans le contexte CSS.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '902c02ee-b67a-57ac-b0aa-537759c13192'}
+              - column: {name: section_id, value: '3e57c0c3-0d97-5715-b5cf-4c60aec5ae57'}
+              - column: {name: title, value: 'box model'}
+              - column: {name: slug, value: 'box-model'}
+              - column: {name: summary, value: 'Découvrir box model avec un exemple testable.'}
+              - column: {name: content, value: '# Box model\n\nObjectif : comprendre et pratiquer box model dans le contexte CSS.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '0f12d29b-77b1-5c9c-8350-ceffe60f8667'}
+              - column: {name: section_id, value: '3e57c0c3-0d97-5715-b5cf-4c60aec5ae57'}
+              - column: {name: title, value: 'Flexbox'}
+              - column: {name: slug, value: 'flexbox'}
+              - column: {name: summary, value: 'Découvrir Flexbox avec un exemple testable.'}
+              - column: {name: content, value: '# Flexbox\n\nObjectif : comprendre et pratiquer Flexbox dans le contexte CSS.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'ad26f53e-358d-5ebe-9bba-e6544e2f9bd8'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Pratique guidee'}
+              - column: {name: slug, value: 'css-pratique-guidee'}
+              - column: {name: description, value: 'Section exemple pour progresser en CSS.'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '187528a1-1af5-50d5-8ec5-67bfaf04b343'}
+              - column: {name: domain_id, value: '22222222-2222-2222-2222-222222222222'}
+              - column: {name: title, value: 'Bonnes pratiques'}
+              - column: {name: slug, value: 'css-bonnes-pratiques'}
+              - column: {name: description, value: 'Section exemple pour progresser en CSS.'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: name, value: 'JavaScript'}
+              - column: {name: slug, value: 'javascript'}
+              - column: {name: short_description, value: 'Bases de la programmation web'}
+              - column: {name: description, value: 'Variables, conditions, boucles, fonctions et DOM pour rendre une page interactive.'}
+              - column: {name: icon, value: 'JS'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '8dc52e11-2607-5921-a7ce-1af1aa4c484d'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'Fondations'}
+              - column: {name: slug, value: 'javascript-fondations'}
+              - column: {name: description, value: 'Section exemple pour progresser en JavaScript.'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'fd1ab6f0-8294-5aac-8c1c-105840c23919'}
+              - column: {name: section_id, value: '8dc52e11-2607-5921-a7ce-1af1aa4c484d'}
+              - column: {name: title, value: 'variables'}
+              - column: {name: slug, value: 'variables'}
+              - column: {name: summary, value: 'Découvrir variables avec un exemple testable.'}
+              - column: {name: content, value: '# Variables\n\nObjectif : comprendre et pratiquer variables dans le contexte JavaScript.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '836a5943-b3db-5978-9b1f-0dbd56a8a1bf'}
+              - column: {name: section_id, value: '8dc52e11-2607-5921-a7ce-1af1aa4c484d'}
+              - column: {name: title, value: 'conditions'}
+              - column: {name: slug, value: 'conditions'}
+              - column: {name: summary, value: 'Découvrir conditions avec un exemple testable.'}
+              - column: {name: content, value: '# Conditions\n\nObjectif : comprendre et pratiquer conditions dans le contexte JavaScript.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'ee387be7-517d-5030-9c23-20a707c9f141'}
+              - column: {name: section_id, value: '8dc52e11-2607-5921-a7ce-1af1aa4c484d'}
+              - column: {name: title, value: 'boucles'}
+              - column: {name: slug, value: 'boucles'}
+              - column: {name: summary, value: 'Découvrir boucles avec un exemple testable.'}
+              - column: {name: content, value: '# Boucles\n\nObjectif : comprendre et pratiquer boucles dans le contexte JavaScript.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '979c5e10-0cb4-5015-be55-43efbf736cde'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'Pratique guidee'}
+              - column: {name: slug, value: 'javascript-pratique-guidee'}
+              - column: {name: description, value: 'Section exemple pour progresser en JavaScript.'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '58c44db2-fdd4-55b1-afce-6c8ada2fda8d'}
+              - column: {name: domain_id, value: '33333333-3333-3333-3333-333333333333'}
+              - column: {name: title, value: 'Bonnes pratiques'}
+              - column: {name: slug, value: 'javascript-bonnes-pratiques'}
+              - column: {name: description, value: 'Section exemple pour progresser en JavaScript.'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: name, value: 'PHP'}
+              - column: {name: slug, value: 'php'}
+              - column: {name: short_description, value: 'Fondamentaux côté serveur'}
+              - column: {name: description, value: 'Syntaxe, tableaux, formulaires et sessions pour créer des pages dynamiques.'}
+              - column: {name: icon, value: 'PHP'}
+              - column: {name: display_order, valueNumeric: 4}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'a5e91168-2799-5446-876a-fb2c833d35a0'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'Fondations'}
+              - column: {name: slug, value: 'php-fondations'}
+              - column: {name: description, value: 'Section exemple pour progresser en PHP.'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '81d0ab6b-5789-5e30-be2d-a56029d54524'}
+              - column: {name: section_id, value: 'a5e91168-2799-5446-876a-fb2c833d35a0'}
+              - column: {name: title, value: 'syntaxe de base'}
+              - column: {name: slug, value: 'syntaxe-de-base'}
+              - column: {name: summary, value: 'Découvrir syntaxe de base avec un exemple testable.'}
+              - column: {name: content, value: '# Syntaxe de base\n\nObjectif : comprendre et pratiquer syntaxe de base dans le contexte PHP.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'a12b7bbc-3cbe-51fe-a6ac-68e26c10153c'}
+              - column: {name: section_id, value: 'a5e91168-2799-5446-876a-fb2c833d35a0'}
+              - column: {name: title, value: 'tableaux'}
+              - column: {name: slug, value: 'tableaux'}
+              - column: {name: summary, value: 'Découvrir tableaux avec un exemple testable.'}
+              - column: {name: content, value: '# Tableaux\n\nObjectif : comprendre et pratiquer tableaux dans le contexte PHP.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'b5a4efcc-4469-584e-b800-7ba5b707c60a'}
+              - column: {name: section_id, value: 'a5e91168-2799-5446-876a-fb2c833d35a0'}
+              - column: {name: title, value: 'formulaires'}
+              - column: {name: slug, value: 'formulaires'}
+              - column: {name: summary, value: 'Découvrir formulaires avec un exemple testable.'}
+              - column: {name: content, value: '# Formulaires\n\nObjectif : comprendre et pratiquer formulaires dans le contexte PHP.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '50cd37ab-ec1f-55f0-bc81-65409b3a8d5b'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'Pratique guidee'}
+              - column: {name: slug, value: 'php-pratique-guidee'}
+              - column: {name: description, value: 'Section exemple pour progresser en PHP.'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '09de09af-0df7-550e-be83-7e103128bc2d'}
+              - column: {name: domain_id, value: '44444444-4444-4444-4444-444444444444'}
+              - column: {name: title, value: 'Bonnes pratiques'}
+              - column: {name: slug, value: 'php-bonnes-pratiques'}
+              - column: {name: description, value: 'Section exemple pour progresser en PHP.'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: name, value: 'SQL'}
+              - column: {name: slug, value: 'sql'}
+              - column: {name: short_description, value: 'Manipuler les données relationnelles'}
+              - column: {name: description, value: 'Tables, SELECT, jointures et opérations d’écriture en base de données.'}
+              - column: {name: icon, value: 'SQL'}
+              - column: {name: display_order, valueNumeric: 5}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '34073eba-8961-5b71-af3a-5f1178fff3db'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'Fondations'}
+              - column: {name: slug, value: 'sql-fondations'}
+              - column: {name: description, value: 'Section exemple pour progresser en SQL.'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '6cd281e1-009f-5ebd-93bb-b577fdf82cb5'}
+              - column: {name: section_id, value: '34073eba-8961-5b71-af3a-5f1178fff3db'}
+              - column: {name: title, value: 'creation de tables'}
+              - column: {name: slug, value: 'creation-de-tables'}
+              - column: {name: summary, value: 'Découvrir creation de tables avec un exemple testable.'}
+              - column: {name: content, value: '# Creation de tables\n\nObjectif : comprendre et pratiquer creation de tables dans le contexte SQL.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '1786809d-9dfb-518a-89b2-1be4b4a44020'}
+              - column: {name: section_id, value: '34073eba-8961-5b71-af3a-5f1178fff3db'}
+              - column: {name: title, value: 'SELECT'}
+              - column: {name: slug, value: 'select'}
+              - column: {name: summary, value: 'Découvrir SELECT avec un exemple testable.'}
+              - column: {name: content, value: '# Select\n\nObjectif : comprendre et pratiquer SELECT dans le contexte SQL.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '3429fdea-e5d6-5245-9ee0-2363773682ce'}
+              - column: {name: section_id, value: '34073eba-8961-5b71-af3a-5f1178fff3db'}
+              - column: {name: title, value: 'jointures'}
+              - column: {name: slug, value: 'jointures'}
+              - column: {name: summary, value: 'Découvrir jointures avec un exemple testable.'}
+              - column: {name: content, value: '# Jointures\n\nObjectif : comprendre et pratiquer jointures dans le contexte SQL.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '1e77010e-7ae9-5240-a6de-c3300a131f8f'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'Pratique guidee'}
+              - column: {name: slug, value: 'sql-pratique-guidee'}
+              - column: {name: description, value: 'Section exemple pour progresser en SQL.'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'd58cca54-01cd-599a-9dbe-33bc97345393'}
+              - column: {name: domain_id, value: '55555555-5555-5555-5555-555555555555'}
+              - column: {name: title, value: 'Bonnes pratiques'}
+              - column: {name: slug, value: 'sql-bonnes-pratiques'}
+              - column: {name: description, value: 'Section exemple pour progresser en SQL.'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_domains
+            columns:
+              - column: {name: id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: name, value: 'Figma et wireframes'}
+              - column: {name: slug, value: 'figma-wireframes'}
+              - column: {name: short_description, value: 'Concevoir avant de coder'}
+              - column: {name: description, value: 'Frames, wireframes, composants, grilles et lisibilité UI/UX.'}
+              - column: {name: icon, value: 'Figma'}
+              - column: {name: display_order, valueNumeric: 6}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '3e0ce9a5-dcac-5cf2-8ee4-f17a2477368f'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Fondations'}
+              - column: {name: slug, value: 'figma-wireframes-fondations'}
+              - column: {name: description, value: 'Section exemple pour progresser en Figma et wireframes.'}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'd889e81f-feec-5908-981a-a62e9e0bf862'}
+              - column: {name: section_id, value: '3e0ce9a5-dcac-5cf2-8ee4-f17a2477368f'}
+              - column: {name: title, value: 'creer une frame'}
+              - column: {name: slug, value: 'creer-une-frame'}
+              - column: {name: summary, value: 'Découvrir creer une frame avec un exemple testable.'}
+              - column: {name: content, value: '# Creer une frame\n\nObjectif : comprendre et pratiquer creer une frame dans le contexte Figma et wireframes.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 1}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: 'ef8e2165-e78d-51bb-b3e9-746eb021474c'}
+              - column: {name: section_id, value: '3e0ce9a5-dcac-5cf2-8ee4-f17a2477368f'}
+              - column: {name: title, value: 'construire un wireframe'}
+              - column: {name: slug, value: 'construire-un-wireframe'}
+              - column: {name: summary, value: 'Découvrir construire un wireframe avec un exemple testable.'}
+              - column: {name: content, value: '# Construire un wireframe\n\nObjectif : comprendre et pratiquer construire un wireframe dans le contexte Figma et wireframes.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: lessons
+            columns:
+              - column: {name: id, value: '74e36586-6bc2-5e06-b510-5bc4204e03a9'}
+              - column: {name: section_id, value: '3e0ce9a5-dcac-5cf2-8ee4-f17a2477368f'}
+              - column: {name: title, value: 'organiser les composants'}
+              - column: {name: slug, value: 'organiser-les-composants'}
+              - column: {name: summary, value: 'Découvrir organiser les composants avec un exemple testable.'}
+              - column: {name: content, value: '# Organiser les composants\n\nObjectif : comprendre et pratiquer organiser les composants dans le contexte Figma et wireframes.\n\nCette leçon introduit les notions essentielles, propose un exemple simple et donne une checklist de vérification. Sources à consulter ultérieurement : documentation officielle MDN pour HTML/CSS/JavaScript, documentation PostgreSQL pour SQL, documentation PHP, documentation Figma et cours Grafikart.'}
+              - column: {name: level, value: 'BEGINNER'}
+              - column: {name: estimated_duration_minutes, valueNumeric: 20}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: 'b67441b7-f58a-5930-9256-23e05f5a35c6'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Pratique guidee'}
+              - column: {name: slug, value: 'figma-wireframes-pratique-guidee'}
+              - column: {name: description, value: 'Section exemple pour progresser en Figma et wireframes.'}
+              - column: {name: display_order, valueNumeric: 2}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
+        - insert:
+            tableName: learning_sections
+            columns:
+              - column: {name: id, value: '441f56de-4f88-532a-bd27-7afc86891861'}
+              - column: {name: domain_id, value: '66666666-6666-6666-6666-666666666666'}
+              - column: {name: title, value: 'Bonnes pratiques'}
+              - column: {name: slug, value: 'figma-wireframes-bonnes-pratiques'}
+              - column: {name: description, value: 'Section exemple pour progresser en Figma et wireframes.'}
+              - column: {name: display_order, valueNumeric: 3}
+              - column: {name: status, value: 'PUBLISHED'}
+              - column: {name: created_at, valueDate: '2026-07-18T10:00:00'}
+              - column: {name: updated_at, valueDate: '2026-07-18T10:00:00'}
