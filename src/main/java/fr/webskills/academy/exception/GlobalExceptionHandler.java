@@ -6,11 +6,12 @@ import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(ResourceNotFoundException.class)
-    ResponseEntity<ApiError> notFound(RuntimeException ex, HttpServletRequest req) {
+    @ExceptionHandler({ResourceNotFoundException.class, NoResourceFoundException.class})
+    ResponseEntity<ApiError> notFound(Exception ex, HttpServletRequest req) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), req);
     }
 

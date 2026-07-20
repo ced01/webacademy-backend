@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/004-seed-requested-learning-sections.yml
   - include:
       file: db/changelog/005-complete-learning-content.yml
+  - include:
+      file: db/changelog/006-course-platform-no-progress.yml

@@ -118,17 +118,6 @@ public final class LearningDtos {
             String description,
             int displayOrder) {}
 
-    public record ProgressRequest(@Min(0) @Max(100) int progressPercentage, boolean completed) {}
-
-    public record ProgressResponse(
-            UUID id,
-            UUID lessonId,
-            boolean completed,
-            int progressPercentage,
-            Instant startedAt,
-            Instant completedAt,
-            Instant lastViewedAt) {}
-
     public record AccessCodeRequest(@Size(max = 120) String label) {}
 
     public record AccessCodeAdminResponse(

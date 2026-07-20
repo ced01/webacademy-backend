@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.webskills.academy.domain.AccessCode;
-import fr.webskills.academy.domain.Lesson;
 import fr.webskills.academy.domain.enums.PublicationStatus;
 import fr.webskills.academy.repository.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +30,6 @@ class WebSkillsAcademyApplicationTests {
     @Autowired AccessCodeRepository accessCodes;
     @Autowired LearningDomainRepository domains;
     @Autowired LearningSectionRepository sections;
-    @Autowired LessonRepository lessons;
-    @Autowired LearnerProgressRepository progress;
 
     @BeforeEach
     void cleanAccessCodes() {
@@ -93,31 +91,82 @@ class WebSkillsAcademyApplicationTests {
     }
 
     @Test
-    void register_requires_active_access_code() throws Exception {
-        String code = "REGISTER-" + UUID.randomUUID();
-        accessCode(code, true, null);
-        mvc.perform(
-                        post("/api/v1/auth/register")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(
-                                        """
-                                {"email":"new-user@test.local","password":"Password123!","firstName":"Ada","lastName":"Lovelace","accessCode":"%s"}
-                                """
-                                                .formatted(code)))
+    void learner_token_is_required_to_read_course_catalog() throws Exception {
+        mvc.perform(get("/api/v1/learning-domains")).andExpect(status().isUnauthorized());
+
+        String token = learnerToken("CATALOG-" + UUID.randomUUID());
+        mvc.perform(get("/api/v1/learning-domains").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").isNotEmpty())
-                .andExpect(jsonPath("$.role").value("LEARNER"));
+                .andExpect(jsonPath("$[0].slug").exists());
     }
 
     @Test
-    void learner_cannot_generate_access_code() throws Exception {
-        String learnerToken = learnerToken("LEARNER-FORBID-" + UUID.randomUUID());
+    void learner_can_read_domains_sections_and_markdown_content() throws Exception {
+        String token = learnerToken("READ-" + UUID.randomUUID());
+        mvc.perform(get("/api/v1/learning-domains").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.slug == 'html')]").exists());
+
         mvc.perform(
-                        post("/api/v1/admin/access-codes")
-                                .header("Authorization", "Bearer " + learnerToken)
+                        get("/api/v1/learning-domains/html/sections")
+                                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].status").value("PUBLISHED"))
+                .andExpect(
+                        jsonPath("$[0].content")
+                                .value(
+                                        org.hamcrest.Matchers.containsString(
+                                                "## Objectifs pédagogiques")));
+    }
+
+    @Test
+    void public_sections_accept_intermediate_enum_label_and_search_filters() throws Exception {
+        String token = learnerToken("INTERMEDIATE-" + UUID.randomUUID());
+        mvc.perform(
+                        get("/api/v1/learning-domains/html/sections")
+                                .header("Authorization", "Bearer " + token)
+                                .param("level", "Intermediate"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.slug == 'header-nav-main')]").exists())
+                .andExpect(jsonPath("$[?(@.level == 'BEGINNER')]").doesNotExist());
+
+        mvc.perform(
+                        get("/api/v1/search")
+                                .header("Authorization", "Bearer " + token)
+                                .param("domain", "html")
+                                .param("level", "intermédiaire")
+                                .param("q", "landmarks"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].domainSlug").value("html"))
+                .andExpect(jsonPath("$[0].level").value("INTERMEDIATE"));
+    }
+
+    @Test
+    void sections_are_sorted_and_slugs_are_unique_inside_domain() {
+        var html = domains.findBySlug("html").orElseThrow();
+        var htmlSections =
+                sections.findByDomainIdAndStatusOrderByDisplayOrderAsc(
+                        html.getId(), PublicationStatus.PUBLISHED);
+        assertThat(htmlSections)
+                .isSortedAccordingTo((a, b) -> a.getDisplayOrder() - b.getDisplayOrder());
+        assertThat(htmlSections).hasSizeGreaterThanOrEqualTo(16);
+        assertThat(new HashSet<>(htmlSections.stream().map(s -> s.getSlug()).toList()))
+                .hasSize(htmlSections.size());
+        assertThat(htmlSections.stream().filter(s -> s.getLevel().name().equals("INTERMEDIATE")))
+                .hasSizeGreaterThanOrEqualTo(8);
+    }
+
+    @Test
+    void progress_endpoints_are_removed_and_do_not_store_personal_progress() throws Exception {
+        String token = learnerToken("NO-PROGRESS-" + UUID.randomUUID());
+        mvc.perform(get("/api/v1/progress").header("Authorization", "Bearer " + token))
+                .andExpect(status().isNotFound());
+        mvc.perform(
+                        put("/api/v1/progress/lessons/" + UUID.randomUUID())
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{}"))
-                .andExpect(status().isForbidden());
+                                .content("{\"progressPercentage\":40,\"completed\":false}"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -171,49 +220,6 @@ class WebSkillsAcademyApplicationTests {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    void public_learning_filters_published_content() throws Exception {
-        mvc.perform(get("/api/v1/learning-domains"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].slug").exists());
-        assertThat(domains.findByStatusOrderByDisplayOrderAsc(PublicationStatus.PUBLISHED))
-                .isNotEmpty();
-        mvc.perform(get("/api/v1/learning-domains/html/sections"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].status").value("PUBLISHED"));
-    }
-
-    @Test
-    void public_sections_accept_level_labels_and_search_filters() throws Exception {
-        mvc.perform(get("/api/v1/learning-domains/html/sections").param("level", "intermédiaire"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.title == 'HTML semantique')]").exists())
-                .andExpect(jsonPath("$[?(@.level == 'BEGINNER')]").doesNotExist());
-
-        mvc.perform(
-                        get("/api/v1/search")
-                                .param("domain", "html")
-                                .param("level", "Intermediate")
-                                .param("q", "semantique"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].domainSlug").value("html"))
-                .andExpect(jsonPath("$[0].level").value("INTERMEDIATE"));
-    }
-
-    @Test
-    void update_progress_still_works() throws Exception {
-        String token = learnerToken("PROGRESS-" + UUID.randomUUID());
-        Lesson lesson = lessons.findAll().getFirst();
-        mvc.perform(
-                        put("/api/v1/progress/lessons/" + lesson.getId())
-                                .header("Authorization", "Bearer " + token)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"progressPercentage\":40,\"completed\":false}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.progressPercentage").value(40));
-        assertThat(progress.findAll()).isNotEmpty();
-    }
-
     private AccessCode accessCode(String raw, boolean active, Instant revokedAt) {
         AccessCode code = new AccessCode();
         code.setLabel("Test");
@@ -230,7 +236,7 @@ class WebSkillsAcademyApplicationTests {
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(
                                                 """
-                                {"email":"admin@test.local","password":"Admin123!"}
+                                {"email":"admin@test.local","password": "Admin123!"}
                                 """))
                         .andExpect(status().isOk())
                         .andReturn()

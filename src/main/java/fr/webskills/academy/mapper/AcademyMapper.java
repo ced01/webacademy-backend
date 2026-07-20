@@ -124,17 +124,6 @@ public class AcademyMapper {
                 r.getDisplayOrder());
     }
 
-    public ProgressResponse toProgressResponse(LearnerProgress p) {
-        return new ProgressResponse(
-                p.getId(),
-                p.getLesson().getId(),
-                p.isCompleted(),
-                p.getProgressPercentage(),
-                p.getStartedAt(),
-                p.getCompletedAt(),
-                p.getLastViewedAt());
-    }
-
     public AccessCodeAdminResponse toAccessCodeResponse(AccessCode c) {
         User creator = c.getCreatedBy();
         return new AccessCodeAdminResponse(
