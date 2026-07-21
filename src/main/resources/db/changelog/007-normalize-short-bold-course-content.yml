@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-normalize-short-bold-course-content
+      author: hermes
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+              UPDATE learning_sections s
+              SET content = '# ' || s.title || CHR(10) || CHR(10) ||
+                '## Objectifs pédagogiques' || CHR(10) ||
+                '- Comprendre le rôle de ' || LOWER(s.title) || ' dans le domaine ' || LOWER(d.name) || '.' || CHR(10) ||
+                '- Savoir l''utiliser dans un petit projet web.' || CHR(10) ||
+                '- Identifier les erreurs fréquentes et les corriger.' || CHR(10) || CHR(10) ||
+                '## Prérequis' || CHR(10) ||
+                CASE s.level
+                  WHEN 'BEGINNER' THEN 'Niveau Débutant. Il faut connaître les notions des niveaux précédents et savoir lire un exemple de code court.'
+                  WHEN 'INTERMEDIATE' THEN 'Niveau Intermédiaire. Il faut connaître les notions des niveaux précédents et savoir lire un exemple de code court.'
+                  WHEN 'ADVANCED' THEN 'Niveau Avancé. Il faut connaître les notions des niveaux précédents et savoir lire un exemple de code court.'
+                  ELSE 'Niveau adapté au parcours. Il faut connaître les notions des niveaux précédents et savoir lire un exemple de code court.'
+                END || CHR(10) || CHR(10) ||
+                '## Introduction' || CHR(10) ||
+                'Cette section transforme la notion ' || LOWER(s.title) || ' en compétence pratique. Elle explique quand l’utiliser, pourquoi elle existe et comment la vérifier dans une application réelle.' || CHR(10) || CHR(10) ||
+                '## Concepts essentiels' || CHR(10) ||
+                'La notion doit être reliée à un besoin utilisateur, à une structure de données claire et à un comportement observable. Commencez par nommer précisément les éléments, puis validez le résultat avec un exemple minimal.' || CHR(10) || CHR(10) ||
+                '## Syntaxe' || CHR(10) ||
+                '```text' || CHR(10) ||
+                '<main>' || CHR(10) ||
+                '  <h1>Exemple</h1>' || CHR(10) ||
+                '  <p>Contenu structuré.</p>' || CHR(10) ||
+                '</main>' || CHR(10) ||
+                '```' || CHR(10) || CHR(10) ||
+                '## Exemple simple' || CHR(10) ||
+                'Créez un exemple minimal, exécutez-le, puis ajoutez une seule variation. Cette méthode rend les erreurs plus faciles à isoler.' || CHR(10) || CHR(10) ||
+                '## Explication de l''exemple' || CHR(10) ||
+                'Chaque ligne a un rôle explicite : définir la structure, fournir une information utile, puis rendre le comportement vérifiable par lecture ou par test.' || CHR(10) || CHR(10) ||
+                '## Exemple concret' || CHR(10) ||
+                'Dans une plateforme de cours, cette notion sert à afficher un contenu fiable, maintenable et compréhensible par plusieurs développeurs.' || CHR(10) || CHR(10) ||
+                '## Bonnes pratiques' || CHR(10) ||
+                '- Donner des noms explicites aux fichiers, variables, composants ou balises.' || CHR(10) ||
+                '- Valider le résultat avec un cas nominal et un cas limite.' || CHR(10) ||
+                '- Séparer la structure, le comportement et la présentation lorsque c''est possible.' || CHR(10) ||
+                '- Documenter les choix qui peuvent surprendre un autre développeur.' || CHR(10) || CHR(10) ||
+                '## Erreurs fréquentes' || CHR(10) ||
+                '- Copier un exemple sans comprendre ses prérequis.' || CHR(10) ||
+                '- Mélanger plusieurs objectifs dans la même modification.' || CHR(10) ||
+                '- Tester uniquement le cas qui fonctionne déjà.' || CHR(10) || CHR(10) ||
+                '## Accessibilité' || CHR(10) ||
+                'Préserver la navigation clavier, les intitulés compréhensibles et une hiérarchie de titres logique lorsque la notion touche l’interface.' || CHR(10) || CHR(10) ||
+                '## Sécurité' || CHR(10) ||
+                'Ne jamais faire confiance aux données externes : validez les entrées, échappez les sorties et appliquez le principe du moindre privilège.' || CHR(10) || CHR(10) ||
+                '## Exercice' || CHR(10) ||
+                'Créez une mini-page ou une mini-fonction qui utilise ' || LOWER(s.title) || ', puis ajoutez un cas de test ou une vérification manuelle reproductible.' || CHR(10) || CHR(10) ||
+                '## Correction' || CHR(10) ||
+                'Comparez votre solution avec les critères suivants : structure claire, nommage explicite, comportement vérifiable, absence de duplication inutile et lien avec la documentation officielle.' || CHR(10) || CHR(10) ||
+                '## Résumé' || CHR(10) ||
+                s.title || ' devient utile lorsque la notion est comprise, appliquée dans un exemple court, puis vérifiée dans un cas proche d''un vrai projet.' || CHR(10) || CHR(10) ||
+                '## Sources officielles' || CHR(10) ||
+                '- [' || COALESCE(s.source_name, 'Documentation officielle') || '](' || COALESCE(s.source_url, 'https://developer.mozilla.org/fr/') || ')',
+                updated_at = '2026-07-20T00:00:00'
+              FROM learning_domains d
+              WHERE s.domain_id = d.id
+                AND (
+                  s.content LIKE '%## Synthèse pédagogique%'
+                  OR s.content LIKE '%## Liens utiles%'
+                  OR s.content LIKE '%Commence par un exemple minimal%'
+                );

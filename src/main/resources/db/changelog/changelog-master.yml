@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/005-complete-learning-content.yml
   - include:
       file: db/changelog/006-course-platform-no-progress.yml
+  - include:
+      file: db/changelog/007-normalize-short-bold-course-content.yml
