@@ -93,8 +93,13 @@ public class AdminContentController {
         return content.createLesson(sectionId, r);
     }
 
+    @GetMapping("/lessons/{id}")
+    LessonResponse lesson(@PathVariable UUID id) {
+        return content.getAdminLesson(id);
+    }
+
     @PutMapping("/lessons/{id}")
-    LessonResponse updateLesson(@PathVariable UUID id, @RequestBody @Valid LessonRequest r) {
+    LessonResponse updateLesson(@PathVariable UUID id, @RequestBody @Valid UpdateLessonRequest r) {
         return content.updateLesson(id, r);
     }
 

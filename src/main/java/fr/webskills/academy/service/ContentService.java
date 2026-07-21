@@ -237,6 +237,12 @@ public class ContentService {
                 l, resources.findByLessonIdOrderByDisplayOrderAsc(l.getId()));
     }
 
+    public LessonResponse getAdminLesson(UUID id) {
+        Lesson l = lesson(id);
+        return mapper.toLessonResponse(
+                l, resources.findByLessonIdOrderByDisplayOrderAsc(l.getId()));
+    }
+
     @Transactional
     public LessonResponse createLesson(UUID sectionId, LessonRequest r) {
         Lesson l = new Lesson();
@@ -254,6 +260,24 @@ public class ContentService {
         replaceResources(l, r.resources());
         return mapper.toLessonResponse(
                 l, resources.findByLessonIdOrderByDisplayOrderAsc(l.getId()));
+    }
+
+    @Transactional
+    public LessonResponse updateLesson(UUID id, UpdateLessonRequest r) {
+        Lesson l = lesson(id);
+        LearningSection targetSection = section(r.sectionId());
+        l.setSection(targetSection);
+        l.setTitle(r.title().trim());
+        l.setSummary(r.summary());
+        l.setContent(r.content());
+        l.setLevel(r.level());
+        l.setEstimatedDurationMinutes(r.estimatedDurationMinutes());
+        l.setDisplayOrder(r.displayOrder());
+        l.setStatus(r.status());
+        Lesson saved = lessons.save(l);
+        replaceResources(saved, r.resources());
+        return mapper.toLessonResponse(
+                saved, resources.findByLessonIdOrderByDisplayOrderAsc(saved.getId()));
     }
 
     @Transactional

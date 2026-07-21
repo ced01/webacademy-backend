@@ -30,6 +30,8 @@ class WebSkillsAcademyApplicationTests {
     @Autowired AccessCodeRepository accessCodes;
     @Autowired LearningDomainRepository domains;
     @Autowired LearningSectionRepository sections;
+    @Autowired LessonRepository lessons;
+    @Autowired LessonResourceRepository lessonResources;
 
     @BeforeEach
     void cleanAccessCodes() {
@@ -218,6 +220,124 @@ class WebSkillsAcademyApplicationTests {
                                 {"title":"URL KO","level":"BEGINNER","displayOrder":100,"sourceUrl":"ftp://example.test","status":"DRAFT"}
                                 """))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void admin_can_update_lesson_and_response_contains_new_values() throws Exception {
+        String token = adminToken();
+        var html = domains.findBySlug("html").orElseThrow();
+        var section = sections.findByDomainIdOrderByDisplayOrderAsc(html.getId()).get(0);
+        var lesson = lessons.findBySectionIdOrderByDisplayOrderAsc(section.getId()).get(0);
+
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + lesson.getId())
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"title":"Leçon modifiée","summary":"Résumé modifié","content":"# Nouveau contenu\\n\\n```html\\n<h1>OK</h1>\\n```","level":"ADVANCED","sectionId":"%s","estimatedDurationMinutes":45,"displayOrder":7,"status":"PUBLISHED","resources":[{"title":"MDN officiel","type":"LINK","url":"https://developer.mozilla.org/fr/docs/Web/HTML","description":"Référence officielle","displayOrder":0}]}
+                                """
+                                                .formatted(section.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(lesson.getId().toString()))
+                .andExpect(jsonPath("$.title").value("Leçon modifiée"))
+                .andExpect(jsonPath("$.summary").value("Résumé modifié"))
+                .andExpect(
+                        jsonPath("$.content")
+                                .value(org.hamcrest.Matchers.containsString("```html")))
+                .andExpect(jsonPath("$.level").value("ADVANCED"))
+                .andExpect(jsonPath("$.sectionId").value(section.getId().toString()))
+                .andExpect(jsonPath("$.displayOrder").value(7))
+                .andExpect(jsonPath("$.status").value("PUBLISHED"))
+                .andExpect(jsonPath("$.resources[0].title").value("MDN officiel"));
+
+        var updated = lessons.findById(lesson.getId()).orElseThrow();
+        assertThat(updated.getTitle()).isEqualTo("Leçon modifiée");
+        assertThat(updated.getSlug()).isEqualTo(lesson.getSlug());
+        assertThat(lessonResources.findByLessonIdOrderByDisplayOrderAsc(lesson.getId())).hasSize(1);
+    }
+
+    @Test
+    void learner_cannot_update_lesson() throws Exception {
+        String token = learnerToken("LESSON-FORBIDDEN-" + UUID.randomUUID());
+        UUID lessonId = lessons.findAll().get(0).getId();
+        UUID sectionId = sections.findAll().get(0).getId();
+
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + lessonId)
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(validLessonUpdateJson(sectionId)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void update_lesson_returns_404_when_lesson_or_section_does_not_exist() throws Exception {
+        String token = adminToken();
+        UUID sectionId = sections.findAll().get(0).getId();
+
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + UUID.randomUUID())
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(validLessonUpdateJson(sectionId)))
+                .andExpect(status().isNotFound());
+
+        UUID lessonId = lessons.findAll().get(0).getId();
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + lessonId)
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(validLessonUpdateJson(UUID.randomUUID())))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void update_lesson_validates_required_title_content_level_section_and_positive_order()
+            throws Exception {
+        String token = adminToken();
+        UUID lessonId = lessons.findAll().get(0).getId();
+        UUID sectionId = sections.findAll().get(0).getId();
+
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + lessonId)
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"title":"","summary":"Résumé","content":"Contenu","level":"BEGINNER","sectionId":"%s","displayOrder":0,"status":"PUBLISHED","resources":[]}
+                                """
+                                                .formatted(sectionId)))
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + lessonId)
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"title":"Titre","summary":"Résumé","content":"","level":"BEGINNER","sectionId":"%s","displayOrder":0,"status":"PUBLISHED","resources":[]}
+                                """
+                                                .formatted(sectionId)))
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(
+                        put("/api/v1/admin/lessons/" + lessonId)
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"title":"Titre","summary":"Résumé","content":"Contenu","sectionId":"%s","displayOrder":-1,"status":"PUBLISHED","resources":[]}
+                                """
+                                                .formatted(sectionId)))
+                .andExpect(status().isBadRequest());
+    }
+
+    private String validLessonUpdateJson(UUID sectionId) {
+        return """
+                {"title":"Titre","summary":"Résumé","content":"Contenu","level":"BEGINNER","sectionId":"%s","displayOrder":0,"status":"PUBLISHED","resources":[]}
+                """
+                .formatted(sectionId);
     }
 
     private AccessCode accessCode(String raw, boolean active, Instant revokedAt) {

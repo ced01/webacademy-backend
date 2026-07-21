@@ -1,6 +1,7 @@
 package fr.webskills.academy.dto;
 
 import fr.webskills.academy.domain.enums.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.Instant;
 import java.util.*;
@@ -77,7 +78,18 @@ public final class LearningDtos {
             Integer estimatedDurationMinutes,
             int displayOrder,
             PublicationStatus status,
-            List<LessonResourceRequest> resources) {}
+            List<@Valid LessonResourceRequest> resources) {}
+
+    public record UpdateLessonRequest(
+            @NotBlank(message = "Le titre est obligatoire") @Size(max = 180) String title,
+            @Size(max = 500) String summary,
+            @NotBlank(message = "Le contenu est obligatoire") String content,
+            @NotNull(message = "Le niveau est obligatoire") Level level,
+            @NotNull(message = "La section associée est obligatoire") UUID sectionId,
+            Integer estimatedDurationMinutes,
+            @NotNull(message = "L’ordre d’affichage est obligatoire") @Min(0) Integer displayOrder,
+            @NotNull(message = "Le statut de publication est obligatoire") PublicationStatus status,
+            List<@Valid LessonResourceRequest> resources) {}
 
     public record LessonSummaryResponse(
             UUID id,
@@ -108,7 +120,7 @@ public final class LearningDtos {
             ResourceType type,
             @NotBlank @Size(max = 500) @Pattern(regexp = "https?://.+") String url,
             String description,
-            int displayOrder) {}
+            @Min(0) int displayOrder) {}
 
     public record LessonResourceResponse(
             UUID id,
