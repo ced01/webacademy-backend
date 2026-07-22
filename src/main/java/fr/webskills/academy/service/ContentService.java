@@ -228,6 +228,19 @@ public class ContentService {
         return list.stream().map(mapper::toLessonSummary).toList();
     }
 
+    public List<LessonSummaryResponse> adminLessons() {
+        return lessons.findAll().stream()
+                .sorted(
+                        Comparator.comparing(
+                                        (Lesson lesson) ->
+                                                lesson.getSection().getDomain().getDisplayOrder())
+                                .thenComparing(lesson -> lesson.getSection().getDisplayOrder())
+                                .thenComparing(Lesson::getDisplayOrder)
+                                .thenComparing(Lesson::getTitle))
+                .map(mapper::toLessonSummary)
+                .toList();
+    }
+
     public LessonResponse getLesson(String slug) {
         Lesson l =
                 lessons.findBySlug(slug)
