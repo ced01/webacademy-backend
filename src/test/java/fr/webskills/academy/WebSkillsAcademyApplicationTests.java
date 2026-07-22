@@ -258,18 +258,6 @@ class WebSkillsAcademyApplicationTests {
     }
 
     @Test
-    void admin_can_list_lessons_before_selecting_one_to_edit() throws Exception {
-        String token = adminToken();
-        var lesson = lessons.findAll().get(0);
-
-        mvc.perform(get("/api/v1/admin/lessons").header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.id == '%s')]".formatted(lesson.getId())).exists())
-                .andExpect(jsonPath("$[0].sectionId").exists())
-                .andExpect(jsonPath("$[0].status").exists());
-    }
-
-    @Test
     void learner_cannot_update_lesson() throws Exception {
         String token = learnerToken("LESSON-FORBIDDEN-" + UUID.randomUUID());
         UUID lessonId = lessons.findAll().get(0).getId();

@@ -93,11 +93,6 @@ public class AdminContentController {
         return content.createLesson(sectionId, r);
     }
 
-    @GetMapping("/lessons")
-    List<LessonSummaryResponse> lessons() {
-        return content.adminLessons();
-    }
-
     @GetMapping("/lessons/{id}")
     LessonResponse lesson(@PathVariable UUID id) {
         return content.getAdminLesson(id);

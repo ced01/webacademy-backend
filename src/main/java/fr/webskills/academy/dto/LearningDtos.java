@@ -83,11 +83,10 @@ public final class LearningDtos {
     public record UpdateLessonRequest(
             @NotBlank(message = "Le titre est obligatoire") @Size(max = 180) String title,
             @Size(max = 500) String summary,
-            @NotBlank(message = "Le contenu est obligatoire") @Size(max = 50000) String content,
+            @NotBlank(message = "Le contenu est obligatoire") String content,
             @NotNull(message = "Le niveau est obligatoire") Level level,
             @NotNull(message = "La section associée est obligatoire") UUID sectionId,
-            @Positive(message = "La durée estimée doit être positive")
-                    Integer estimatedDurationMinutes,
+            Integer estimatedDurationMinutes,
             @NotNull(message = "L’ordre d’affichage est obligatoire") @Min(0) Integer displayOrder,
             @NotNull(message = "Le statut de publication est obligatoire") PublicationStatus status,
             List<@Valid LessonResourceRequest> resources) {}
