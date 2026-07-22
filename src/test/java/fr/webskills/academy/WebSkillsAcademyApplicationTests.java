@@ -193,7 +193,7 @@ class WebSkillsAcademyApplicationTests {
                                         """
                                 {"name":"Autre","slug":"spring-boot-test","displayOrder":51,"status":"DRAFT"}
                                 """))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -225,9 +225,8 @@ class WebSkillsAcademyApplicationTests {
     @Test
     void admin_can_update_lesson_and_response_contains_new_values() throws Exception {
         String token = adminToken();
-        var html = domains.findBySlug("html").orElseThrow();
-        var section = sections.findByDomainIdOrderByDisplayOrderAsc(html.getId()).get(0);
-        var lesson = lessons.findBySectionIdOrderByDisplayOrderAsc(section.getId()).get(0);
+        var lesson = lessons.findAll().get(0);
+        var section = lesson.getSection();
 
         mvc.perform(
                         put("/api/v1/admin/lessons/" + lesson.getId())
@@ -255,6 +254,102 @@ class WebSkillsAcademyApplicationTests {
         assertThat(updated.getTitle()).isEqualTo("Leçon modifiée");
         assertThat(updated.getSlug()).isEqualTo(lesson.getSlug());
         assertThat(lessonResources.findByLessonIdOrderByDisplayOrderAsc(lesson.getId())).hasSize(1);
+    }
+
+    @Test
+    void admin_can_update_section_and_response_contains_new_values() throws Exception {
+        String token = adminToken();
+        var html = domains.findBySlug("html").orElseThrow();
+        var section = sections.findByDomainIdOrderByDisplayOrderAsc(html.getId()).get(0);
+        String newSlug = "section-admin-update-" + UUID.randomUUID();
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + section.getId())
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"domainId":"%s","title":"Section modifiée","slug":"%s","summary":"Résumé section","content":"# Nouveau contenu de section","description":"Description section","level":"ADVANCED","displayOrder":12,"videoUrl":"https://www.youtube.com/watch?v=dQw4w9WgXcQ","sourceUrl":"https://developer.mozilla.org/fr/docs/Web/HTML","sourceName":"MDN","status":"PUBLISHED","id":"%s"}
+                                """
+                                                .formatted(
+                                                        html.getId(), newSlug, UUID.randomUUID())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(section.getId().toString()))
+                .andExpect(jsonPath("$.domainId").value(html.getId().toString()))
+                .andExpect(jsonPath("$.title").value("Section modifiée"))
+                .andExpect(jsonPath("$.slug").value(newSlug))
+                .andExpect(jsonPath("$.summary").value("Résumé section"))
+                .andExpect(jsonPath("$.content").value("# Nouveau contenu de section"))
+                .andExpect(jsonPath("$.description").value("Description section"))
+                .andExpect(jsonPath("$.level").value("ADVANCED"))
+                .andExpect(jsonPath("$.displayOrder").value(12))
+                .andExpect(jsonPath("$.status").value("PUBLISHED"));
+
+        var updated = sections.findById(section.getId()).orElseThrow();
+        assertThat(updated.getTitle()).isEqualTo("Section modifiée");
+        assertThat(updated.getSlug()).isEqualTo(newSlug);
+        assertThat(updated.getDomain().getId()).isEqualTo(html.getId());
+    }
+
+    @Test
+    void update_section_rejects_unknown_missing_invalid_forbidden_and_duplicate_cases()
+            throws Exception {
+        String admin = adminToken();
+        String learner = learnerToken("SECTION-FORBIDDEN-" + UUID.randomUUID());
+        var html = domains.findBySlug("html").orElseThrow();
+        var orderedSections = sections.findByDomainIdOrderByDisplayOrderAsc(html.getId());
+        var target = orderedSections.get(0);
+        var other = orderedSections.get(1);
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + target.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        validSectionUpdateJson(html.getId(), "section-sans-token")))
+                .andExpect(status().isUnauthorized());
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + target.getId())
+                                .header("Authorization", "Bearer " + learner)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(validSectionUpdateJson(html.getId(), "section-learner")))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + UUID.randomUUID())
+                                .header("Authorization", "Bearer " + admin)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        validSectionUpdateJson(
+                                                html.getId(), "section-introuvable")))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + target.getId())
+                                .header("Authorization", "Bearer " + admin)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"domainId":"%s","title":"   ","slug":"slug invalide","summary":"Résumé","content":"Contenu","description":"Description","level":"BEGINNER","displayOrder":-1,"status":"PUBLISHED"}
+                                """
+                                                .formatted(html.getId())))
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + target.getId())
+                                .header("Authorization", "Bearer " + admin)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        validSectionUpdateJson(
+                                                UUID.randomUUID(), "section-domaine-manquant")))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(
+                        put("/api/v1/admin/sections/" + target.getId())
+                                .header("Authorization", "Bearer " + admin)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(validSectionUpdateJson(html.getId(), other.getSlug())))
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -338,6 +433,13 @@ class WebSkillsAcademyApplicationTests {
                 {"title":"Titre","summary":"Résumé","content":"Contenu","level":"BEGINNER","sectionId":"%s","displayOrder":0,"status":"PUBLISHED","resources":[]}
                 """
                 .formatted(sectionId);
+    }
+
+    private String validSectionUpdateJson(UUID domainId, String slug) {
+        return """
+                {"domainId":"%s","title":"Titre section","slug":"%s","summary":"Résumé","content":"Contenu","description":"Description","level":"BEGINNER","displayOrder":0,"status":"PUBLISHED"}
+                """
+                .formatted(domainId, slug);
     }
 
     private AccessCode accessCode(String raw, boolean active, Instant revokedAt) {

@@ -66,7 +66,7 @@ public class AdminContentController {
 
     @PutMapping("/sections/{id}")
     LearningSectionResponse updateSection(
-            @PathVariable UUID id, @RequestBody @Valid LearningSectionRequest r) {
+            @PathVariable UUID id, @RequestBody @Valid UpdateLearningSectionRequest r) {
         return content.updateSection(id, r);
     }
 

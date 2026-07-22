@@ -160,12 +160,15 @@ public class ContentService {
     }
 
     @Transactional
-    public LearningSectionResponse updateSection(UUID id, LearningSectionRequest r) {
+    public LearningSectionResponse updateSection(UUID id, UpdateLearningSectionRequest r) {
         LearningSection s = section(id);
-        applySection(s, r);
-        if (sections.existsByDomainIdAndSlugAndIdNot(s.getDomain().getId(), s.getSlug(), id)) {
+        LearningDomain targetDomain = domain(r.domainId());
+        String targetSlug = normalizeSlug(r.slug(), r.title());
+        if (sections.existsByDomainIdAndSlugAndIdNot(targetDomain.getId(), targetSlug, id)) {
             throw new DuplicateSlugException("Slug de section déjà utilisé pour ce domaine");
         }
+        s.setDomain(targetDomain);
+        applySection(s, r);
         return mapper.toSectionResponse(s);
     }
 
@@ -199,6 +202,21 @@ public class ContentService {
         s.setSourceName(r.sourceName());
         s.setSourceVerifiedAt(r.sourceVerifiedAt());
         s.setStatus(r.status() == null ? PublicationStatus.DRAFT : r.status());
+    }
+
+    private void applySection(LearningSection s, UpdateLearningSectionRequest r) {
+        s.setTitle(r.title().trim());
+        s.setSlug(normalizeSlug(r.slug(), r.title()));
+        s.setSummary(r.summary());
+        s.setContent(r.content());
+        s.setDescription(r.description());
+        s.setLevel(r.level());
+        s.setDisplayOrder(r.displayOrder());
+        s.setVideoUrl(r.videoUrl());
+        s.setSourceUrl(r.sourceUrl());
+        s.setSourceName(r.sourceName());
+        s.setSourceVerifiedAt(r.sourceVerifiedAt());
+        s.setStatus(r.status());
     }
 
     private LearningSection section(UUID id) {

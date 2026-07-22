@@ -41,12 +41,28 @@ public final class LearningDtos {
             String content,
             String description,
             @NotNull Level level,
-            int displayOrder,
+            @Min(0) int displayOrder,
             @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String videoUrl,
             @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String sourceUrl,
             @Size(max = 180) String sourceName,
             Instant sourceVerifiedAt,
             PublicationStatus status) {}
+
+    public record UpdateLearningSectionRequest(
+            @NotNull(message = "Le domaine associé est obligatoire") UUID domainId,
+            @NotBlank(message = "Le titre est obligatoire") @Size(max = 180) String title,
+            @Pattern(regexp = "^$|[a-z0-9-]+", message = "Le slug est invalide") String slug,
+            @Size(max = 500) String summary,
+            String content,
+            String description,
+            @NotNull(message = "Le niveau est obligatoire") Level level,
+            @NotNull(message = "L’ordre d’affichage est obligatoire") @Min(0) Integer displayOrder,
+            @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String videoUrl,
+            @Size(max = 500) @Pattern(regexp = "^$|https?://.+") String sourceUrl,
+            @Size(max = 180) String sourceName,
+            Instant sourceVerifiedAt,
+            @NotNull(message = "Le statut de publication est obligatoire")
+                    PublicationStatus status) {}
 
     public record LearningSectionResponse(
             UUID id,

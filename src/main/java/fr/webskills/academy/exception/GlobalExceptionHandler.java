@@ -21,11 +21,15 @@ public class GlobalExceptionHandler {
         ExpiredAccessCodeException.class,
         DisabledAccessCodeException.class,
         AccessCodeUsageLimitReachedException.class,
-        DuplicateSlugException.class,
         IllegalArgumentException.class
     })
     ResponseEntity<ApiError> badRequest(RuntimeException ex, HttpServletRequest req) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), req);
+    }
+
+    @ExceptionHandler(DuplicateSlugException.class)
+    ResponseEntity<ApiError> conflict(RuntimeException ex, HttpServletRequest req) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), req);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
