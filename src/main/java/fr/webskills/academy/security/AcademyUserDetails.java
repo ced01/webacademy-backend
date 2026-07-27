@@ -1,25 +1,56 @@
 package fr.webskills.academy.security;
 
+import fr.webskills.academy.domain.AccessCode;
 import fr.webskills.academy.domain.User;
+import fr.webskills.academy.domain.enums.Role;
 import java.util.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public record AcademyUserDetails(User user) implements UserDetails {
+public class AcademyUserDetails implements UserDetails {
+    private final User user;
+    private final UUID accessCodeId;
+    private final String accessCodeLabel;
+    private final Role role;
+    private final boolean enabled;
+
+    public AcademyUserDetails(User user) {
+        this.user = user;
+        this.accessCodeId = null;
+        this.accessCodeLabel = null;
+        this.role = user.getRole();
+        this.enabled = user.isEnabled();
+    }
+
+    private AcademyUserDetails(AccessCode accessCode) {
+        this.user = null;
+        this.accessCodeId = accessCode.getId();
+        this.accessCodeLabel = accessCode.getLabel();
+        this.role = Role.LEARNER;
+        this.enabled = accessCode.isUsable();
+    }
+
+    public static AcademyUserDetails forAccessCode(AccessCode accessCode) {
+        return new AcademyUserDetails(accessCode);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user == null ? null : user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail() != null ? user.getEmail() : user.getId().toString();
+        if (user != null) {
+            return user.getEmail() != null ? user.getEmail() : user.getId().toString();
+        }
+        return "access-code:" + accessCodeId;
     }
 
     @Override
@@ -39,10 +70,26 @@ public record AcademyUserDetails(User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return enabled;
     }
 
     public UUID id() {
-        return user.getId();
+        return user == null ? null : user.getId();
+    }
+
+    public User user() {
+        return user;
+    }
+
+    public Role role() {
+        return role;
+    }
+
+    public UUID accessCodeId() {
+        return accessCodeId;
+    }
+
+    public String accessCodeLabel() {
+        return accessCodeLabel;
     }
 }

@@ -1,5 +1,6 @@
 package fr.webskills.academy.security;
 
+import fr.webskills.academy.domain.AccessCode;
 import fr.webskills.academy.domain.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -21,10 +22,22 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole().name());
         claims.put("uid", user.getId().toString());
+        return build(claims, user.getEmail() != null ? user.getEmail() : user.getId().toString());
+    }
+
+    public String generate(AccessCode accessCode) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "LEARNER");
+        claims.put("accessCodeId", accessCode.getId().toString());
+        claims.put("accessCodeLabel", accessCode.getLabel());
+        return build(claims, "access-code:" + accessCode.getId());
+    }
+
+    private String build(Map<String, Object> claims, String subject) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(user.getEmail() != null ? user.getEmail() : user.getId().toString())
+                .setSubject(subject)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + expiration))
                 .signWith(key(), SignatureAlgorithm.HS256)

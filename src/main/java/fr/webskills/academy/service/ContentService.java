@@ -309,21 +309,8 @@ public class ContentService {
     }
 
     public List<LearningSectionResponse> searchSections(String q, Level level, String domainSlug) {
-        return sections.findAll().stream()
-                .filter(section -> section.getStatus() == PublicationStatus.PUBLISHED)
-                .filter(section -> section.getDomain().getStatus() == PublicationStatus.PUBLISHED)
-                .filter(
-                        section ->
-                                domainSlug == null
-                                        || domainSlug.isBlank()
-                                        || section.getDomain().getSlug().equals(domainSlug))
-                .filter(section -> matchesSection(section, level, q))
-                .sorted(
-                        Comparator.comparing(
-                                        (LearningSection section) ->
-                                                section.getDomain().getDisplayOrder())
-                                .thenComparing(LearningSection::getDisplayOrder)
-                                .thenComparing(LearningSection::getTitle))
+        String query = q == null || q.isBlank() ? null : q.trim();
+        return sections.searchPublished(query, level, domainSlug).stream()
                 .map(mapper::toSectionResponse)
                 .toList();
     }

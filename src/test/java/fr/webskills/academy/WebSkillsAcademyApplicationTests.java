@@ -32,6 +32,7 @@ class WebSkillsAcademyApplicationTests {
     @Autowired LearningSectionRepository sections;
     @Autowired LessonRepository lessons;
     @Autowired LessonResourceRepository lessonResources;
+    @Autowired UserRepository users;
 
     @BeforeEach
     void cleanAccessCodes() {
@@ -39,26 +40,36 @@ class WebSkillsAcademyApplicationTests {
     }
 
     @Test
-    void admin_generates_lists_and_revokes_access_code() throws Exception {
+    void admin_generates_raw_class_code_once_lists_only_metadata_and_revokes_it() throws Exception {
         String token = adminToken();
         String createdBody =
                 mvc.perform(
                                 post("/api/v1/admin/access-codes")
                                         .header("Authorization", "Bearer " + token)
                                         .contentType(MediaType.APPLICATION_JSON)
-                                        .content("{\"label\":\"Promotion\"}"))
+                                        .content("{\"label\":\"Classe HTML\"}"))
                         .andExpect(status().isCreated())
                         .andExpect(jsonPath("$.code").isNotEmpty())
+                        .andExpect(jsonPath("$.codePreview").isNotEmpty())
                         .andExpect(jsonPath("$.active").value(true))
+                        .andExpect(jsonPath("$.usageCount").value(0))
                         .andReturn()
                         .getResponse()
                         .getContentAsString();
         JsonNode created = json.readTree(createdBody);
-        assertThat(created.get("code").asText()).startsWith("WSA-");
+        String rawCode = created.get("code").asText();
+        assertThat(rawCode).startsWith("WSA-");
+
+        AccessCode persisted =
+                accessCodes.findById(UUID.fromString(created.get("id").asText())).orElseThrow();
+        assertThat(persisted.getCode()).isNotEqualTo(rawCode);
+        assertThat(persisted.getCodeHash()).isNotBlank();
 
         mvc.perform(get("/api/v1/admin/access-codes").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].label").value("Promotion"));
+                .andExpect(jsonPath("$[0].label").value("Classe HTML"))
+                .andExpect(jsonPath("$[0].code").doesNotExist())
+                .andExpect(jsonPath("$[0].codePreview").isNotEmpty());
 
         mvc.perform(
                         patch(
@@ -69,6 +80,42 @@ class WebSkillsAcademyApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.active").value(false))
                 .andExpect(jsonPath("$.revokedAt").isNotEmpty());
+    }
+
+    @Test
+    void class_code_login_reuses_the_shared_code_without_creating_learner_users() throws Exception {
+        String admin = adminToken();
+        long usersBefore = userCount();
+        String createdBody =
+                mvc.perform(
+                                post("/api/v1/admin/access-codes")
+                                        .header("Authorization", "Bearer " + admin)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content("{\"label\":\"Classe CSS\"}"))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString();
+        String rawCode = json.readTree(createdBody).get("code").asText();
+
+        for (int i = 0; i < 2; i++) {
+            mvc.perform(
+                            post("/api/v1/auth/access-code")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content("{\"code\":\"" + rawCode + "\"}"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.role").value("LEARNER"))
+                    .andExpect(jsonPath("$.userId").doesNotExist())
+                    .andExpect(jsonPath("$.accessCodeLabel").value("Classe CSS"));
+        }
+
+        assertThat(userCount()).isEqualTo(usersBefore);
+        AccessCode code =
+                accessCodes.findAll().stream()
+                        .filter(c -> c.getLabel().equals("Classe CSS"))
+                        .findFirst()
+                        .orElseThrow();
+        assertThat(code.getUsageCount()).isEqualTo(2);
+        assertThat(code.getLastUsedAt()).isNotNull();
     }
 
     @Test
@@ -449,6 +496,10 @@ class WebSkillsAcademyApplicationTests {
         code.setActive(active);
         code.setRevokedAt(revokedAt);
         return accessCodes.save(code);
+    }
+
+    private long userCount() {
+        return users.count();
     }
 
     private String adminToken() throws Exception {

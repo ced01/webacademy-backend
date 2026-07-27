@@ -1,5 +1,6 @@
 package fr.webskills.academy.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fr.webskills.academy.domain.enums.Role;
 import jakarta.validation.constraints.*;
 import java.util.UUID;
@@ -19,7 +20,22 @@ public final class AuthDtos {
     public record LoginRequest(
             @NotBlank @Email String email, @NotBlank @Size(min = 8, max = 120) String password) {}
 
-    public record AuthResponse(String accessToken, String tokenType, Role role, UUID userId) {}
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record AuthResponse(
+            String accessToken,
+            String tokenType,
+            Role role,
+            UUID userId,
+            UUID accessCodeId,
+            String accessCodeLabel) {}
 
-    public record MeResponse(UUID id, String email, String firstName, String lastName, Role role) {}
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record MeResponse(
+            UUID id,
+            String email,
+            String firstName,
+            String lastName,
+            Role role,
+            UUID accessCodeId,
+            String accessCodeLabel) {}
 }

@@ -30,7 +30,7 @@ public class AdminAccessCodeController {
     AccessCodeAdminResponse create(
             @RequestBody(required = false) @Valid AccessCodeRequest r,
             @AuthenticationPrincipal AcademyUserDetails details) {
-        return service.create(r == null ? new AccessCodeRequest(null) : r, details);
+        return service.create(r == null ? new AccessCodeRequest(null, null, null) : r, details);
     }
 
     @PatchMapping("/{id}/revoke")

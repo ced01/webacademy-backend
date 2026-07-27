@@ -34,20 +34,16 @@ public class AuthService {
 
     @Transactional
     public AuthResponse authenticateWithCode(String rawCode) {
-        validateAccessCode(rawCode);
-        User user = new User();
-        user.setEmail("learner-" + java.util.UUID.randomUUID() + "@access.local");
-        user.setFirstName("Apprenant");
-        user.setLastName("WebSkills");
-        user.setRole(Role.LEARNER);
-        user.setEnabled(true);
-        userRepo.save(user);
-        return new AuthResponse(jwt.generate(user), "Bearer", user.getRole(), user.getId());
+        AccessCode code = validateAccessCode(rawCode);
+        code.recordUsage();
+        return new AuthResponse(
+                jwt.generate(code), "Bearer", Role.LEARNER, null, code.getId(), code.getLabel());
     }
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        validateAccessCode(request.accessCode());
+        AccessCode code = validateAccessCode(request.accessCode());
+        code.recordUsage();
         if (userRepo.findByEmail(request.email()).isPresent()) {
             throw new IllegalArgumentException("Un compte existe déjà avec cet email");
         }
@@ -59,7 +55,8 @@ public class AuthService {
         user.setRole(Role.LEARNER);
         user.setEnabled(true);
         userRepo.save(user);
-        return new AuthResponse(jwt.generate(user), "Bearer", user.getRole(), user.getId());
+        return new AuthResponse(
+                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null);
     }
 
     @Transactional(readOnly = true)
@@ -72,13 +69,30 @@ public class AuthService {
         if (!user.isEnabled() || user.getRole() != Role.ADMIN) {
             throw new ForbiddenException("Accès administrateur requis");
         }
-        return new AuthResponse(jwt.generate(user), "Bearer", user.getRole(), user.getId());
+        return new AuthResponse(
+                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null);
     }
 
     public MeResponse me(AcademyUserDetails details) {
+        if (details.user() == null) {
+            return new MeResponse(
+                    null,
+                    null,
+                    "Classe",
+                    details.accessCodeLabel(),
+                    details.role(),
+                    details.accessCodeId(),
+                    details.accessCodeLabel());
+        }
         User u = details.user();
         return new MeResponse(
-                u.getId(), u.getEmail(), u.getFirstName(), u.getLastName(), u.getRole());
+                u.getId(),
+                u.getEmail(),
+                u.getFirstName(),
+                u.getLastName(),
+                u.getRole(),
+                null,
+                null);
     }
 
     private AccessCode validateAccessCode(String rawCode) {
@@ -99,7 +113,8 @@ public class AuthService {
                                                                 new InvalidAccessCodeException(
                                                                         "Le code d’accès est invalide")));
         if (!code.isUsable()) {
-            throw new DisabledAccessCodeException("Le code d’accès est révoqué ou désactivé");
+            throw new DisabledAccessCodeException(
+                    "Le code d’accès est révoqué, expiré ou désactivé");
         }
         return code;
     }

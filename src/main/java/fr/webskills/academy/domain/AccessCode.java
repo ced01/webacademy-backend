@@ -55,7 +55,16 @@ public class AccessCode {
     private Instant updatedAt;
 
     public boolean isUsable() {
-        return active && revokedAt == null;
+        Instant now = Instant.now();
+        return active
+                && revokedAt == null
+                && (expiresAt == null || expiresAt.isAfter(now))
+                && (maxUses == null || usageCount < maxUses);
+    }
+
+    public void recordUsage() {
+        usageCount++;
+        lastUsedAt = Instant.now();
     }
 
     @PrePersist

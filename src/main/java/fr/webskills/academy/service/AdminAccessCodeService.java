@@ -10,6 +10,7 @@ import fr.webskills.academy.security.AcademyUserDetails;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,13 @@ public class AdminAccessCodeService {
 
     private final AccessCodeRepository repo;
     private final AcademyMapper mapper;
+    private final PasswordEncoder encoder;
 
-    public AdminAccessCodeService(AccessCodeRepository repo, AcademyMapper mapper) {
+    public AdminAccessCodeService(
+            AccessCodeRepository repo, AcademyMapper mapper, PasswordEncoder encoder) {
         this.repo = repo;
         this.mapper = mapper;
+        this.encoder = encoder;
     }
 
     @Transactional(readOnly = true)
@@ -36,13 +40,18 @@ public class AdminAccessCodeService {
 
     @Transactional
     public AccessCodeAdminResponse create(AccessCodeRequest r, AcademyUserDetails details) {
+        String rawCode = generateUniqueRawCode();
         AccessCode c = new AccessCode();
-        c.setCode(generateUniqueCode());
-        c.setLabel(r.label() == null || r.label().isBlank() ? "Code d’accès" : r.label().trim());
+        c.setCode(preview(rawCode));
+        c.setCodeHash(encoder.encode(rawCode));
+        c.setLabel(r.label() == null || r.label().isBlank() ? "Code classe" : r.label().trim());
+        c.setExpiresAt(r.expiresAt());
+        c.setMaxUses(r.maxUses());
         c.setActive(true);
         User creator = details == null ? null : details.user();
         c.setCreatedBy(creator);
-        return mapper.toAccessCodeResponse(repo.save(c));
+        AccessCode saved = repo.save(c);
+        return mapper.toAccessCodeCreationResponse(saved, rawCode);
     }
 
     @Transactional
@@ -61,14 +70,18 @@ public class AdminAccessCodeService {
         return mapper.toAccessCodeResponse(c);
     }
 
-    private String generateUniqueCode() {
+    private String generateUniqueRawCode() {
         byte[] bytes = new byte[24];
         String code;
         do {
             RANDOM.nextBytes(bytes);
             code = "WSA-" + ENCODER.encodeToString(bytes);
-        } while (repo.existsByCode(code));
+        } while (repo.existsByCode(preview(code)));
         return code;
+    }
+
+    private String preview(String rawCode) {
+        return rawCode.substring(0, Math.min(12, rawCode.length())) + "…";
     }
 
     private AccessCode get(UUID id) {

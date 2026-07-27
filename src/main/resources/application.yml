@@ -8,16 +8,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    open-in-view: false
   liquibase:
     change-log: classpath:db/changelog/changelog-master.yml
-server:
-  port: ${SERVER_PORT:8080}
 app:
   jwt:
     secret: ${JWT_SECRET:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
     expiration: ${JWT_EXPIRATION:86400000}
   frontend-url: ${FRONTEND_URL:http://localhost:5173}
+  swagger:
+    enabled: ${ENABLE_SWAGGER:false}
   admin:
     email: ${ADMIN_DEFAULT_EMAIL:admin@webskills.local}
     password: ${ADMIN_DEFAULT_PASSWORD:ChangeMe123!}

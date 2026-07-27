@@ -3,13 +3,22 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.yml
 app:
   jwt:
     secret: ${JWT_SECRET}
-    expiration: ${JWT_EXPIRATION}
+    expiration: ${JWT_EXPIRATION:86400000}
   frontend-url: ${FRONTEND_URL}
   swagger:
     enabled: ${ENABLE_SWAGGER:false}
   admin:
     email: ${ADMIN_DEFAULT_EMAIL}
     password: ${ADMIN_DEFAULT_PASSWORD}
+logging:
+  level:
+    fr.webskills.academy: INFO
+    org.springframework.security: WARN

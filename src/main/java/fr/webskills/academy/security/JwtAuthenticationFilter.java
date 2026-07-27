@@ -1,5 +1,6 @@
 package fr.webskills.academy.security;
 
+import fr.webskills.academy.repository.AccessCodeRepository;
 import fr.webskills.academy.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
@@ -17,10 +18,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final AccessCodeRepository accessCodeRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository) {
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            UserRepository userRepository,
+            AccessCodeRepository accessCodeRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
+        this.accessCodeRepository = accessCodeRepository;
     }
 
     @Override
@@ -39,13 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             Claims claims = jwtService.claims(token);
-            UUID userId = UUID.fromString(String.valueOf(claims.get("uid")));
-            var user = userRepository.findById(userId).orElse(null);
-            if (user == null || !user.isEnabled()) {
+            AcademyUserDetails details = detailsFromClaims(claims);
+            if (details == null || !details.isEnabled()) {
                 unauthorized(response);
                 return;
             }
-            var details = new AcademyUserDetails(user);
             var auth =
                     new UsernamePasswordAuthenticationToken(
                             details, token, details.getAuthorities());
@@ -57,6 +61,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         chain.doFilter(request, response);
+    }
+
+    private AcademyUserDetails detailsFromClaims(Claims claims) {
+        Object accessCodeId = claims.get("accessCodeId");
+        if (accessCodeId != null) {
+            return accessCodeRepository
+                    .findById(UUID.fromString(String.valueOf(accessCodeId)))
+                    .filter(code -> code.isUsable())
+                    .map(AcademyUserDetails::forAccessCode)
+                    .orElse(null);
+        }
+        UUID userId = UUID.fromString(String.valueOf(claims.get("uid")));
+        return userRepository
+                .findById(userId)
+                .filter(user -> user.isEnabled())
+                .map(AcademyUserDetails::new)
+                .orElse(null);
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {

@@ -1,5 +1,6 @@
 package fr.webskills.academy.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fr.webskills.academy.domain.enums.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -146,14 +147,21 @@ public final class LearningDtos {
             String description,
             int displayOrder) {}
 
-    public record AccessCodeRequest(@Size(max = 120) String label) {}
+    public record AccessCodeRequest(
+            @Size(max = 120) String label, Instant expiresAt, @Min(1) Integer maxUses) {}
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public record AccessCodeAdminResponse(
             UUID id,
             String code,
+            String codePreview,
             String label,
             boolean active,
             Instant revokedAt,
+            Instant expiresAt,
+            Integer maxUses,
+            int usageCount,
+            Instant lastUsedAt,
             UUID createdById,
             String createdByEmail,
             Instant createdAt,

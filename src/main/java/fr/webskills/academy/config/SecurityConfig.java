@@ -31,7 +31,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity http, @Value("${app.swagger.enabled:false}") boolean swaggerEnabled)
+            throws Exception {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -65,24 +67,29 @@ public class SecurityConfig {
                                                         c.policyDirectives(
                                                                 "default-src 'self'; frame-ancestors 'self'; object-src 'none'")))
                 .authorizeHttpRequests(
-                        req ->
-                                req.requestMatchers(HttpMethod.OPTIONS, "/**")
-                                        .permitAll()
-                                        .requestMatchers(
-                                                "/api/v1/auth/access-code",
-                                                "/api/v1/auth/register",
-                                                "/api/v1/auth/login",
+                        req -> {
+                            req.requestMatchers(HttpMethod.OPTIONS, "/**")
+                                    .permitAll()
+                                    .requestMatchers(
+                                            "/api/v1/auth/access-code",
+                                            "/api/v1/auth/register",
+                                            "/api/v1/auth/login",
+                                            "/error")
+                                    .permitAll();
+                            if (swaggerEnabled) {
+                                req.requestMatchers(
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**",
-                                                "/swagger-ui.html",
-                                                "/error")
-                                        .permitAll()
-                                        .requestMatchers("/api/v1/admin/**")
-                                        .hasRole("ADMIN")
-                                        .requestMatchers("/api/v1/auth/me")
-                                        .authenticated()
-                                        .anyRequest()
-                                        .authenticated())
+                                                "/swagger-ui.html")
+                                        .permitAll();
+                            }
+                            req.requestMatchers("/api/v1/admin/**")
+                                    .hasRole("ADMIN")
+                                    .requestMatchers("/api/v1/auth/me")
+                                    .authenticated()
+                                    .anyRequest()
+                                    .authenticated();
+                        })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

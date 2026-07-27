@@ -125,13 +125,26 @@ public class AcademyMapper {
     }
 
     public AccessCodeAdminResponse toAccessCodeResponse(AccessCode c) {
+        return toAccessCodeResponse(c, null);
+    }
+
+    public AccessCodeAdminResponse toAccessCodeCreationResponse(AccessCode c, String rawCode) {
+        return toAccessCodeResponse(c, rawCode);
+    }
+
+    private AccessCodeAdminResponse toAccessCodeResponse(AccessCode c, String rawCode) {
         User creator = c.getCreatedBy();
         return new AccessCodeAdminResponse(
                 c.getId(),
+                rawCode,
                 c.getCode(),
                 c.getLabel(),
                 c.isActive(),
                 c.getRevokedAt(),
+                c.getExpiresAt(),
+                c.getMaxUses(),
+                c.getUsageCount(),
+                c.getLastUsedAt(),
                 creator == null ? null : creator.getId(),
                 creator == null ? null : creator.getEmail(),
                 c.getCreatedAt(),
