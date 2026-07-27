@@ -148,7 +148,12 @@ public final class LearningDtos {
             int displayOrder) {}
 
     public record AccessCodeRequest(
-            @Size(max = 120) String label, Instant expiresAt, @Min(1) Integer maxUses) {}
+            @Size(max = 120) String label,
+            @Size(max = 1000) String welcomeMessage,
+            @Size(max = 2000) String recommendedPath,
+            Instant startsAt,
+            Instant expiresAt,
+            @Min(1) Integer maxUses) {}
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record AccessCodeAdminResponse(
@@ -156,8 +161,11 @@ public final class LearningDtos {
             String code,
             String codePreview,
             String label,
+            String welcomeMessage,
+            String recommendedPath,
             boolean active,
             Instant revokedAt,
+            Instant startsAt,
             Instant expiresAt,
             Integer maxUses,
             int usageCount,
@@ -166,6 +174,21 @@ public final class LearningDtos {
             String createdByEmail,
             Instant createdAt,
             Instant updatedAt) {}
+
+    public record ClassDashboardResponse(
+            long activeClassCodes,
+            long totalAnonymousClassAccesses,
+            List<ClassDashboardItem> classes) {}
+
+    public record ClassDashboardItem(
+            UUID id,
+            String label,
+            boolean active,
+            Instant startsAt,
+            Instant expiresAt,
+            int usageCount,
+            Instant lastUsedAt,
+            String recommendedPath) {}
 
     public record StatusRequest(@NotNull PublicationStatus status) {}
 

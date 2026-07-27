@@ -27,7 +27,9 @@ public final class AuthDtos {
             Role role,
             UUID userId,
             UUID accessCodeId,
-            String accessCodeLabel) {}
+            String accessCodeLabel,
+            String welcomeMessage,
+            String recommendedPath) {}
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record MeResponse(
@@ -37,5 +39,7 @@ public final class AuthDtos {
             String lastName,
             Role role,
             UUID accessCodeId,
-            String accessCodeLabel) {}
+            String accessCodeLabel,
+            String welcomeMessage,
+            String recommendedPath) {}
 }

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-class-promo-mode-access-code-fields
+      author: hermes
+      changes:
+        - addColumn:
+            tableName: access_codes
+            columns:
+              - column:
+                  name: starts_at
+                  type: timestamp with time zone
+              - column:
+                  name: welcome_message
+                  type: varchar(1000)
+              - column:
+                  name: recommended_path
+                  type: varchar(2000)

@@ -30,6 +30,12 @@ public class JwtService {
         claims.put("role", "LEARNER");
         claims.put("accessCodeId", accessCode.getId().toString());
         claims.put("accessCodeLabel", accessCode.getLabel());
+        if (accessCode.getWelcomeMessage() != null) {
+            claims.put("welcomeMessage", accessCode.getWelcomeMessage());
+        }
+        if (accessCode.getRecommendedPath() != null) {
+            claims.put("recommendedPath", accessCode.getRecommendedPath());
+        }
         return build(claims, "access-code:" + accessCode.getId());
     }
 

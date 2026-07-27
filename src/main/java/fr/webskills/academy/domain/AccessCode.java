@@ -35,6 +35,15 @@ public class AccessCode {
     @Column(name = "expires_at")
     private Instant expiresAt;
 
+    @Column(name = "starts_at")
+    private Instant startsAt;
+
+    @Column(name = "welcome_message", length = 1000)
+    private String welcomeMessage;
+
+    @Column(name = "recommended_path", length = 2000)
+    private String recommendedPath;
+
     @Column(name = "max_uses")
     private Integer maxUses;
 
@@ -58,6 +67,7 @@ public class AccessCode {
         Instant now = Instant.now();
         return active
                 && revokedAt == null
+                && (startsAt == null || !startsAt.isAfter(now))
                 && (expiresAt == null || expiresAt.isAfter(now))
                 && (maxUses == null || usageCount < maxUses);
     }

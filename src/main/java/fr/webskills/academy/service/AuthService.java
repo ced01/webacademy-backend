@@ -37,7 +37,14 @@ public class AuthService {
         AccessCode code = validateAccessCode(rawCode);
         code.recordUsage();
         return new AuthResponse(
-                jwt.generate(code), "Bearer", Role.LEARNER, null, code.getId(), code.getLabel());
+                jwt.generate(code),
+                "Bearer",
+                Role.LEARNER,
+                null,
+                code.getId(),
+                code.getLabel(),
+                code.getWelcomeMessage(),
+                code.getRecommendedPath());
     }
 
     @Transactional
@@ -56,7 +63,7 @@ public class AuthService {
         user.setEnabled(true);
         userRepo.save(user);
         return new AuthResponse(
-                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null);
+                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null, null, null);
     }
 
     @Transactional(readOnly = true)
@@ -70,7 +77,7 @@ public class AuthService {
             throw new ForbiddenException("Accès administrateur requis");
         }
         return new AuthResponse(
-                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null);
+                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null, null, null);
     }
 
     public MeResponse me(AcademyUserDetails details) {
@@ -82,7 +89,9 @@ public class AuthService {
                     details.accessCodeLabel(),
                     details.role(),
                     details.accessCodeId(),
-                    details.accessCodeLabel());
+                    details.accessCodeLabel(),
+                    details.welcomeMessage(),
+                    details.recommendedPath());
         }
         User u = details.user();
         return new MeResponse(
@@ -91,6 +100,8 @@ public class AuthService {
                 u.getFirstName(),
                 u.getLastName(),
                 u.getRole(),
+                null,
+                null,
                 null,
                 null);
     }

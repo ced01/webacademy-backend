@@ -119,6 +119,70 @@ class WebSkillsAcademyApplicationTests {
     }
 
     @Test
+    void class_mode_exposes_welcome_recommended_path_access_dates_and_aggregate_dashboard()
+            throws Exception {
+        String token = adminToken();
+        Instant startsAt = Instant.now().minusSeconds(60);
+        Instant expiresAt = Instant.now().plusSeconds(3600);
+        String createdBody =
+                mvc.perform(
+                                post("/api/v1/admin/access-codes")
+                                        .header("Authorization", "Bearer " + token)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(
+                                                """
+                                {"label":"Promo HTML 2026","welcomeMessage":"Bienvenue la promo HTML","recommendedPath":"Parcours conseillé : HTML puis CSS","startsAt":"%s","expiresAt":"%s"}
+                                """
+                                                        .formatted(startsAt, expiresAt)))
+                        .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$.label").value("Promo HTML 2026"))
+                        .andExpect(jsonPath("$.welcomeMessage").value("Bienvenue la promo HTML"))
+                        .andExpect(
+                                jsonPath("$.recommendedPath")
+                                        .value("Parcours conseillé : HTML puis CSS"))
+                        .andExpect(jsonPath("$.startsAt").isNotEmpty())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString();
+        String rawCode = json.readTree(createdBody).get("code").asText();
+
+        mvc.perform(
+                        post("/api/v1/auth/access-code")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"code\":\"" + rawCode + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessCodeLabel").value("Promo HTML 2026"))
+                .andExpect(jsonPath("$.welcomeMessage").value("Bienvenue la promo HTML"))
+                .andExpect(
+                        jsonPath("$.recommendedPath").value("Parcours conseillé : HTML puis CSS"));
+
+        String learnerToken =
+                json.readTree(
+                                mvc.perform(
+                                                post("/api/v1/auth/access-code")
+                                                        .contentType(MediaType.APPLICATION_JSON)
+                                                        .content("{\"code\":\"" + rawCode + "\"}"))
+                                        .andReturn()
+                                        .getResponse()
+                                        .getContentAsString())
+                        .get("accessToken")
+                        .asText();
+        mvc.perform(get("/api/v1/auth/me").header("Authorization", "Bearer " + learnerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessCodeLabel").value("Promo HTML 2026"))
+                .andExpect(jsonPath("$.welcomeMessage").value("Bienvenue la promo HTML"))
+                .andExpect(
+                        jsonPath("$.recommendedPath").value("Parcours conseillé : HTML puis CSS"));
+
+        mvc.perform(get("/api/v1/admin/dashboard").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activeClassCodes").value(1))
+                .andExpect(jsonPath("$.totalAnonymousClassAccesses").value(2))
+                .andExpect(jsonPath("$.classes[0].label").value("Promo HTML 2026"))
+                .andExpect(jsonPath("$.classes[0].usageCount").value(2));
+    }
+
+    @Test
     void validate_active_code_and_reject_revoked_code() throws Exception {
         String valid = "VALID-" + UUID.randomUUID();
         accessCode(valid, true, null);

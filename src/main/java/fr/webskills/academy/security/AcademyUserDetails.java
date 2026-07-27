@@ -12,6 +12,8 @@ public class AcademyUserDetails implements UserDetails {
     private final User user;
     private final UUID accessCodeId;
     private final String accessCodeLabel;
+    private final String welcomeMessage;
+    private final String recommendedPath;
     private final Role role;
     private final boolean enabled;
 
@@ -19,6 +21,8 @@ public class AcademyUserDetails implements UserDetails {
         this.user = user;
         this.accessCodeId = null;
         this.accessCodeLabel = null;
+        this.welcomeMessage = null;
+        this.recommendedPath = null;
         this.role = user.getRole();
         this.enabled = user.isEnabled();
     }
@@ -27,6 +31,8 @@ public class AcademyUserDetails implements UserDetails {
         this.user = null;
         this.accessCodeId = accessCode.getId();
         this.accessCodeLabel = accessCode.getLabel();
+        this.welcomeMessage = accessCode.getWelcomeMessage();
+        this.recommendedPath = accessCode.getRecommendedPath();
         this.role = Role.LEARNER;
         this.enabled = accessCode.isUsable();
     }
@@ -91,5 +97,13 @@ public class AcademyUserDetails implements UserDetails {
 
     public String accessCodeLabel() {
         return accessCodeLabel;
+    }
+
+    public String welcomeMessage() {
+        return welcomeMessage;
+    }
+
+    public String recommendedPath() {
+        return recommendedPath;
     }
 }

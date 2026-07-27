@@ -46,6 +46,9 @@ public class AdminAccessCodeService {
         c.setCodeHash(encoder.encode(rawCode));
         c.setLabel(r.label() == null || r.label().isBlank() ? "Code classe" : r.label().trim());
         c.setExpiresAt(r.expiresAt());
+        c.setStartsAt(r.startsAt());
+        c.setWelcomeMessage(blankToNull(r.welcomeMessage()));
+        c.setRecommendedPath(blankToNull(r.recommendedPath()));
         c.setMaxUses(r.maxUses());
         c.setActive(true);
         User creator = details == null ? null : details.user();
@@ -70,6 +73,30 @@ public class AdminAccessCodeService {
         return mapper.toAccessCodeResponse(c);
     }
 
+    public ClassDashboardResponse dashboard() {
+        List<AccessCode> codes =
+                repo.findAll().stream()
+                        .sorted(Comparator.comparing(AccessCode::getCreatedAt).reversed())
+                        .toList();
+        long active = codes.stream().filter(AccessCode::isUsable).count();
+        long usages = codes.stream().mapToLong(AccessCode::getUsageCount).sum();
+        List<ClassDashboardItem> items =
+                codes.stream()
+                        .map(
+                                c ->
+                                        new ClassDashboardItem(
+                                                c.getId(),
+                                                c.getLabel(),
+                                                c.isUsable(),
+                                                c.getStartsAt(),
+                                                c.getExpiresAt(),
+                                                c.getUsageCount(),
+                                                c.getLastUsedAt(),
+                                                c.getRecommendedPath()))
+                        .toList();
+        return new ClassDashboardResponse(active, usages, items);
+    }
+
     private String generateUniqueRawCode() {
         byte[] bytes = new byte[24];
         String code;
@@ -82,6 +109,10 @@ public class AdminAccessCodeService {
 
     private String preview(String rawCode) {
         return rawCode.substring(0, Math.min(12, rawCode.length())) + "…";
+    }
+
+    private String blankToNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 
     private AccessCode get(UUID id) {
