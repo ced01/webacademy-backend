@@ -73,6 +73,11 @@ public class AdminAccessCodeService {
         return mapper.toAccessCodeResponse(c);
     }
 
+    @Transactional
+    public void delete(UUID id) {
+        repo.delete(repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("AccessCode not found with id " + id)));
+    }
+
     public ClassDashboardResponse dashboard() {
         List<AccessCode> codes =
                 repo.findAll().stream()

@@ -16,7 +16,7 @@ app:
     expiration: ${JWT_EXPIRATION:86400000}
   frontend-url: ${FRONTEND_URL:http://localhost:5173}
   swagger:
-    enabled: ${ENABLE_SWAGGER:false}
+    enabled: ${ENABLE_SWAGGER:true}
   admin:
     email: ${ADMIN_DEFAULT_EMAIL:admin@webskills.local}
     password: ${ADMIN_DEFAULT_PASSWORD:ChangeMe123!}

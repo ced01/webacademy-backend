@@ -43,4 +43,9 @@ public class AdminAccessCodeController {
     AccessCodeAdminResponse activate(@PathVariable UUID id) {
         return service.activate(id);
     }
+
+    @DeleteMapping("/{id}/delete")
+    void delete(@PathVariable UUID id) {
+         service.delete(id);
+    }
 }
