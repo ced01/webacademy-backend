@@ -153,7 +153,38 @@ public final class LearningDtos {
             @Size(max = 2000) String recommendedPath,
             Instant startsAt,
             Instant expiresAt,
-            @Min(1) Integer maxUses) {}
+            @Min(1) Integer maxUses,
+            List<@Valid ClassPathStepRequest> classPathSteps) {}
+
+    public record ClassPathStepRequest(
+            UUID sectionId,
+            UUID lessonId,
+            @Min(0) int displayOrder,
+            @Size(max = 500) String note) {}
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record ClassPathStepResponse(
+            UUID id,
+            String type,
+            UUID sectionId,
+            String sectionSlug,
+            UUID lessonId,
+            String lessonSlug,
+            String domainSlug,
+            String title,
+            String summary,
+            Level level,
+            String levelLabel,
+            Integer estimatedDurationMinutes,
+            int displayOrder,
+            String note) {}
+
+    public record ClassPathResponse(
+            UUID accessCodeId,
+            String accessCodeLabel,
+            String welcomeMessage,
+            String recommendedPath,
+            List<ClassPathStepResponse> steps) {}
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record AccessCodeAdminResponse(
@@ -173,7 +204,8 @@ public final class LearningDtos {
             UUID createdById,
             String createdByEmail,
             Instant createdAt,
-            Instant updatedAt) {}
+            Instant updatedAt,
+            List<ClassPathStepResponse> classPathSteps) {}
 
     public record ClassDashboardResponse(
             long activeClassCodes,

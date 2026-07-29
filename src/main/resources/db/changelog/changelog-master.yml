@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/007-normalize-short-bold-course-content.yml
   - include:
       file: db/changelog/008-class-promo-mode.yml
+  - include:
+      file: db/changelog/009-structured-class-path.yml

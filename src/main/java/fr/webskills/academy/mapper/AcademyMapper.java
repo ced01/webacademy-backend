@@ -151,6 +151,45 @@ public class AcademyMapper {
                 creator == null ? null : creator.getId(),
                 creator == null ? null : creator.getEmail(),
                 c.getCreatedAt(),
-                c.getUpdatedAt());
+                c.getUpdatedAt(),
+                c.getClassPathSteps().stream().map(this::toClassPathStepResponse).toList());
+    }
+
+    public ClassPathStepResponse toClassPathStepResponse(ClassPathStep step) {
+        if (step.getLesson() != null) {
+            Lesson lesson = step.getLesson();
+            LearningSection section = lesson.getSection();
+            return new ClassPathStepResponse(
+                    step.getId(),
+                    "LESSON",
+                    section.getId(),
+                    section.getSlug(),
+                    lesson.getId(),
+                    lesson.getSlug(),
+                    section.getDomain().getSlug(),
+                    lesson.getTitle(),
+                    lesson.getSummary(),
+                    lesson.getLevel(),
+                    lesson.getLevel().getLabel(),
+                    lesson.getEstimatedDurationMinutes(),
+                    step.getDisplayOrder(),
+                    step.getNote());
+        }
+        LearningSection section = step.getSection();
+        return new ClassPathStepResponse(
+                step.getId(),
+                "SECTION",
+                section.getId(),
+                section.getSlug(),
+                null,
+                null,
+                section.getDomain().getSlug(),
+                section.getTitle(),
+                section.getSummary(),
+                section.getLevel(),
+                section.getLevel().getLabel(),
+                null,
+                step.getDisplayOrder(),
+                step.getNote());
     }
 }

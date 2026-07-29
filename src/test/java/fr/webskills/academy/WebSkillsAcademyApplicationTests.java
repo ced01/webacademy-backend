@@ -119,6 +119,83 @@ class WebSkillsAcademyApplicationTests {
     }
 
     @Test
+    void admin_creates_structured_class_path_and_learner_reads_ordered_steps() throws Exception {
+        String token = adminToken();
+        var firstLesson = lessons.findAll().get(0);
+        var firstSection = sections.findById(firstLesson.getSection().getId()).orElseThrow();
+        UUID firstLessonId = firstLesson.getId();
+        UUID firstSectionId = firstSection.getId();
+        String firstLessonTitle = firstLesson.getTitle();
+        String firstLessonSlug = firstLesson.getSlug();
+        String firstSectionSlug = firstSection.getSlug();
+
+        String createdBody =
+                mvc.perform(
+                                post("/api/v1/admin/access-codes")
+                                        .header("Authorization", "Bearer " + token)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(
+                                                """
+                                {"label":"Promo parcours","classPathSteps":[{"sectionId":"%s","displayOrder":2,"note":"Lire la section"},{"lessonId":"%s","displayOrder":1,"note":"Commencer ici"}]}
+                                """
+                                                        .formatted(firstSectionId, firstLessonId)))
+                        .andExpect(status().isCreated())
+                        .andExpect(
+                                jsonPath("$.classPathSteps[0].lessonId")
+                                        .value(firstLessonId.toString()))
+                        .andExpect(jsonPath("$.classPathSteps[0].title").value(firstLessonTitle))
+                        .andExpect(
+                                jsonPath("$.classPathSteps[1].sectionId")
+                                        .value(firstSectionId.toString()))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString();
+
+        JsonNode created = json.readTree(createdBody);
+        String rawCode = created.get("code").asText();
+
+        mvc.perform(get("/api/v1/admin/access-codes").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].classPathSteps[0].lessonSlug").value(firstLessonSlug))
+                .andExpect(jsonPath("$[0].classPathSteps[1].sectionSlug").value(firstSectionSlug));
+
+        String learnerToken =
+                json.readTree(
+                                mvc.perform(
+                                                post("/api/v1/auth/access-code")
+                                                        .contentType(MediaType.APPLICATION_JSON)
+                                                        .content("{\"code\":\"" + rawCode + "\"}"))
+                                        .andExpect(status().isOk())
+                                        .andReturn()
+                                        .getResponse()
+                                        .getContentAsString())
+                        .get("accessToken")
+                        .asText();
+
+        mvc.perform(get("/api/v1/class-path").header("Authorization", "Bearer " + learnerToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessCodeLabel").value("Promo parcours"))
+                .andExpect(jsonPath("$.steps[0].type").value("LESSON"))
+                .andExpect(jsonPath("$.steps[0].lessonSlug").value(firstLessonSlug))
+                .andExpect(jsonPath("$.steps[1].type").value("SECTION"))
+                .andExpect(jsonPath("$.steps[1].sectionSlug").value(firstSectionSlug));
+    }
+
+    @Test
+    void admin_rejects_class_path_steps_without_section_or_lesson() throws Exception {
+        String token = adminToken();
+        mvc.perform(
+                        post("/api/v1/admin/access-codes")
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
+                                {"label":"Promo invalide","classPathSteps":[{"displayOrder":1,"note":"Sans cible"}]}
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void class_mode_exposes_welcome_recommended_path_access_dates_and_aggregate_dashboard()
             throws Exception {
         String token = adminToken();

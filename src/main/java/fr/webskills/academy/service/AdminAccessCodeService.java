@@ -1,11 +1,10 @@
 package fr.webskills.academy.service;
 
-import fr.webskills.academy.domain.AccessCode;
-import fr.webskills.academy.domain.User;
+import fr.webskills.academy.domain.*;
 import fr.webskills.academy.dto.LearningDtos.*;
 import fr.webskills.academy.exception.ResourceNotFoundException;
 import fr.webskills.academy.mapper.AcademyMapper;
-import fr.webskills.academy.repository.AccessCodeRepository;
+import fr.webskills.academy.repository.*;
 import fr.webskills.academy.security.AcademyUserDetails;
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -20,12 +19,20 @@ public class AdminAccessCodeService {
     private static final Base64.Encoder ENCODER = Base64.getUrlEncoder().withoutPadding();
 
     private final AccessCodeRepository repo;
+    private final LearningSectionRepository sections;
+    private final LessonRepository lessons;
     private final AcademyMapper mapper;
     private final PasswordEncoder encoder;
 
     public AdminAccessCodeService(
-            AccessCodeRepository repo, AcademyMapper mapper, PasswordEncoder encoder) {
+            AccessCodeRepository repo,
+            LearningSectionRepository sections,
+            LessonRepository lessons,
+            AcademyMapper mapper,
+            PasswordEncoder encoder) {
         this.repo = repo;
+        this.sections = sections;
+        this.lessons = lessons;
         this.mapper = mapper;
         this.encoder = encoder;
     }
@@ -51,6 +58,7 @@ public class AdminAccessCodeService {
         c.setRecommendedPath(blankToNull(r.recommendedPath()));
         c.setMaxUses(r.maxUses());
         c.setActive(true);
+        applyClassPathSteps(c, r.classPathSteps());
         User creator = details == null ? null : details.user();
         c.setCreatedBy(creator);
         AccessCode saved = repo.save(c);
@@ -75,7 +83,12 @@ public class AdminAccessCodeService {
 
     @Transactional
     public void delete(UUID id) {
-        repo.delete(repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("AccessCode not found with id " + id)));
+        repo.delete(
+                repo.findById(id)
+                        .orElseThrow(
+                                () ->
+                                        new ResourceNotFoundException(
+                                                "AccessCode not found with id " + id)));
     }
 
     public ClassDashboardResponse dashboard() {
@@ -100,6 +113,43 @@ public class AdminAccessCodeService {
                                                 c.getRecommendedPath()))
                         .toList();
         return new ClassDashboardResponse(active, usages, items);
+    }
+
+    private void applyClassPathSteps(AccessCode code, List<ClassPathStepRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
+            return;
+        }
+        requests.stream()
+                .sorted(Comparator.comparingInt(ClassPathStepRequest::displayOrder))
+                .forEach(
+                        request -> {
+                            boolean hasSection = request.sectionId() != null;
+                            boolean hasLesson = request.lessonId() != null;
+                            if (hasSection == hasLesson) {
+                                throw new IllegalArgumentException(
+                                        "Chaque étape doit cibler une section ou une leçon");
+                            }
+                            ClassPathStep step = new ClassPathStep();
+                            step.setAccessCode(code);
+                            step.setDisplayOrder(request.displayOrder());
+                            step.setNote(blankToNull(request.note()));
+                            if (hasLesson) {
+                                step.setLesson(
+                                        lessons.findById(request.lessonId())
+                                                .orElseThrow(
+                                                        () ->
+                                                                new ResourceNotFoundException(
+                                                                        "Leçon de parcours introuvable")));
+                            } else {
+                                step.setSection(
+                                        sections.findById(request.sectionId())
+                                                .orElseThrow(
+                                                        () ->
+                                                                new ResourceNotFoundException(
+                                                                        "Section de parcours introuvable")));
+                            }
+                            code.getClassPathSteps().add(step);
+                        });
     }
 
     private String generateUniqueRawCode() {

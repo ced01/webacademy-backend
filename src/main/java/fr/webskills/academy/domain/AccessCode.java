@@ -57,6 +57,10 @@ public class AccessCode {
     @JoinColumn(name = "created_by_id")
     private User createdBy;
 
+    @OneToMany(mappedBy = "accessCode", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC")
+    private java.util.List<ClassPathStep> classPathSteps = new java.util.ArrayList<>();
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 

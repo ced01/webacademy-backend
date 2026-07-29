@@ -31,7 +31,10 @@ public class AdminAccessCodeController {
             @RequestBody(required = false) @Valid AccessCodeRequest r,
             @AuthenticationPrincipal AcademyUserDetails details) {
         return service.create(
-                r == null ? new AccessCodeRequest(null, null, null, null, null, null) : r, details);
+                r == null
+                        ? new AccessCodeRequest(null, null, null, null, null, null, List.of())
+                        : r,
+                details);
     }
 
     @PatchMapping("/{id}/revoke")
@@ -46,6 +49,6 @@ public class AdminAccessCodeController {
 
     @DeleteMapping("/{id}/delete")
     void delete(@PathVariable UUID id) {
-         service.delete(id);
+        service.delete(id);
     }
 }

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-structured-class-path-steps
+      author: hermes
+      changes:
+        - createTable:
+            tableName: class_path_steps
+            columns:
+              - column: {name: id, type: uuid, defaultValueComputed: gen_random_uuid(), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: access_code_id, type: uuid, constraints: {nullable: false, foreignKeyName: fk_class_path_access_code, references: access_codes(id)}}
+              - column: {name: section_id, type: uuid, constraints: {foreignKeyName: fk_class_path_section, references: learning_sections(id)}}
+              - column: {name: lesson_id, type: uuid, constraints: {foreignKeyName: fk_class_path_lesson, references: lessons(id)}}
+              - column: {name: display_order, type: int, constraints: {nullable: false}}
+              - column: {name: note, type: varchar(500)}
+              - column: {name: created_at, type: timestamp with time zone, constraints: {nullable: false}}
+              - column: {name: updated_at, type: timestamp with time zone, constraints: {nullable: false}}
+        - createIndex: {tableName: class_path_steps, indexName: idx_class_path_access_code_order, columns: [{column: {name: access_code_id}}, {column: {name: display_order}}]}
