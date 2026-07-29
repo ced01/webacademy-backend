@@ -44,7 +44,9 @@ public class AuthService {
                 code.getId(),
                 code.getLabel(),
                 code.getWelcomeMessage(),
-                code.getRecommendedPath());
+                code.getRecommendedPath(),
+                code.getStartsAt(),
+                code.getExpiresAt());
     }
 
     @Transactional
@@ -63,7 +65,16 @@ public class AuthService {
         user.setEnabled(true);
         userRepo.save(user);
         return new AuthResponse(
-                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null, null, null);
+                jwt.generate(user),
+                "Bearer",
+                user.getRole(),
+                user.getId(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +88,16 @@ public class AuthService {
             throw new ForbiddenException("Accès administrateur requis");
         }
         return new AuthResponse(
-                jwt.generate(user), "Bearer", user.getRole(), user.getId(), null, null, null, null);
+                jwt.generate(user),
+                "Bearer",
+                user.getRole(),
+                user.getId(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
     public MeResponse me(AcademyUserDetails details) {
@@ -91,7 +111,9 @@ public class AuthService {
                     details.accessCodeId(),
                     details.accessCodeLabel(),
                     details.welcomeMessage(),
-                    details.recommendedPath());
+                    details.recommendedPath(),
+                    details.startsAt(),
+                    details.expiresAt());
         }
         User u = details.user();
         return new MeResponse(
@@ -100,6 +122,8 @@ public class AuthService {
                 u.getFirstName(),
                 u.getLastName(),
                 u.getRole(),
+                null,
+                null,
                 null,
                 null,
                 null,

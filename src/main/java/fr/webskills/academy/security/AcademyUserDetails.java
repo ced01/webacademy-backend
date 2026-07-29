@@ -3,6 +3,7 @@ package fr.webskills.academy.security;
 import fr.webskills.academy.domain.AccessCode;
 import fr.webskills.academy.domain.User;
 import fr.webskills.academy.domain.enums.Role;
+import java.time.Instant;
 import java.util.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +15,8 @@ public class AcademyUserDetails implements UserDetails {
     private final String accessCodeLabel;
     private final String welcomeMessage;
     private final String recommendedPath;
+    private final Instant startsAt;
+    private final Instant expiresAt;
     private final Role role;
     private final boolean enabled;
 
@@ -23,6 +26,8 @@ public class AcademyUserDetails implements UserDetails {
         this.accessCodeLabel = null;
         this.welcomeMessage = null;
         this.recommendedPath = null;
+        this.startsAt = null;
+        this.expiresAt = null;
         this.role = user.getRole();
         this.enabled = user.isEnabled();
     }
@@ -33,6 +38,8 @@ public class AcademyUserDetails implements UserDetails {
         this.accessCodeLabel = accessCode.getLabel();
         this.welcomeMessage = accessCode.getWelcomeMessage();
         this.recommendedPath = accessCode.getRecommendedPath();
+        this.startsAt = accessCode.getStartsAt();
+        this.expiresAt = accessCode.getExpiresAt();
         this.role = Role.LEARNER;
         this.enabled = accessCode.isUsable();
     }
@@ -105,5 +112,13 @@ public class AcademyUserDetails implements UserDetails {
 
     public String recommendedPath() {
         return recommendedPath;
+    }
+
+    public Instant startsAt() {
+        return startsAt;
+    }
+
+    public Instant expiresAt() {
+        return expiresAt;
     }
 }

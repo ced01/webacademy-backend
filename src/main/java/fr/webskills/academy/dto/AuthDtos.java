@@ -3,6 +3,7 @@ package fr.webskills.academy.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fr.webskills.academy.domain.enums.Role;
 import jakarta.validation.constraints.*;
+import java.time.Instant;
 import java.util.UUID;
 
 public final class AuthDtos {
@@ -29,7 +30,9 @@ public final class AuthDtos {
             UUID accessCodeId,
             String accessCodeLabel,
             String welcomeMessage,
-            String recommendedPath) {}
+            String recommendedPath,
+            Instant startsAt,
+            Instant expiresAt) {}
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record MeResponse(
@@ -41,5 +44,7 @@ public final class AuthDtos {
             UUID accessCodeId,
             String accessCodeLabel,
             String welcomeMessage,
-            String recommendedPath) {}
+            String recommendedPath,
+            Instant startsAt,
+            Instant expiresAt) {}
 }
